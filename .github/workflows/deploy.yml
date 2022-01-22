@@ -25,6 +25,7 @@ jobs:
           push: true
           tags: ablaszkiewicz/kiedy-kolos-backend:latest
   update-VPS-container:
+    needs: build-and-push
     runs-on: ubuntu-latest
     steps:
       - name: Update image inside VPS
