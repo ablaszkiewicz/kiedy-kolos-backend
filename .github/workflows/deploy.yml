@@ -6,7 +6,7 @@ on:
       - 'main'
 
 jobs:
-  main:
+  Build and push:
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
@@ -24,6 +24,9 @@ jobs:
         with:
           push: true
           tags: ablaszkiewicz/kiedy-kolos-backend:latest
+  Update VPS container:
+    runs-on: ubuntu-latest
+    steps:
       - name: Update image inside VPS
         uses: appleboy/ssh-action@master
         with:
