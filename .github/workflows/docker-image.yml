@@ -1,4 +1,4 @@
-name: ci
+name: Deploy
 
 on:
   push:
@@ -35,6 +35,6 @@ jobs:
           host: ${{ secrets.HOST }}
           USERNAME: ${{ secrets.USERNAME }}
           PORT: ${{ secrets.PORT }}
-          KEY: ${{ secrets.SSHKEY }}
+          KEY: ${{ secrets.SSH_PRIVATE_KEY }}
           script: ls
           
