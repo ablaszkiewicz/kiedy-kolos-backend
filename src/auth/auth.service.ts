@@ -13,14 +13,14 @@ export class AuthService {
     const user = await this.usersService.findOne(email);
 
     if (user && user.password === password) {
-      return { id: user.id };
+      return { id: user.id, email: user.email };
     }
 
     return null;
   }
 
   async login(user: any) {
-    const payload = { sub: user.id };
+    const payload = { sub: user.id, email: user.email };
 
     return {
       id: user.id,
