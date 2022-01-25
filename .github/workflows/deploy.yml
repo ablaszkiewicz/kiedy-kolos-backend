@@ -38,4 +38,4 @@ jobs:
           script: |
             docker stop $(docker ps -q --filter ancestor=ablaszkiewicz/kiedy-kolos-backend )
             docker pull ablaszkiewicz/kiedy-kolos-backend
-            docker run -d -p 3001:3001 ablaszkiewicz/kiedy-kolos-backend
+            docker run --env JWT_SECRET=${{secrets.JWT_SECRET}} -d -p 3001:3001 ablaszkiewicz/kiedy-kolos-backend
