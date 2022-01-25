@@ -38,4 +38,4 @@ jobs:
           script: |
             docker stop $(docker ps -q --filter ancestor=ablaszkiewicz/kiedy-kolos-backend )
             docker pull ablaszkiewicz/kiedy-kolos-backend
-            docker run -d -p 3000:3000 ablaszkiewicz/kiedy-kolos-backend
+            docker run -d -p 3001:3001 ablaszkiewicz/kiedy-kolos-backend
