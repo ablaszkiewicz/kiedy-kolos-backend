@@ -56,7 +56,7 @@ export class UsersService {
   }
 
   async create(email: string, password: string): Promise<void> {
-    if (this.findOne(email) !== undefined) {
+    if ((await this.findOne(email)) !== undefined) {
       throw new HttpException(
         'Email is already in use',
         HttpStatus.BAD_REQUEST,
