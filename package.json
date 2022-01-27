@@ -26,13 +26,17 @@
     "@nestjs/jwt": "^8.0.0",
     "@nestjs/passport": "^8.1.0",
     "@nestjs/platform-express": "^8.1.1",
+    "@nestjs/typeorm": "^8.0.3",
+    "mysql2": "^2.3.3",
     "neo4j-driver": "^4.4.1",
     "passport": "^0.5.2",
     "passport-jwt": "^4.0.0",
     "passport-local": "^1.0.0",
     "reflect-metadata": "^0.1.13",
     "rimraf": "^3.0.2",
-    "rxjs": "^7.4.0"
+    "rxjs": "^7.4.0",
+    "sqlite3": "^5.0.2",
+    "typeorm": "^0.2.41"
   },
   "devDependencies": {
     "@nestjs/cli": "^8.1.3",
