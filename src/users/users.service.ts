@@ -11,19 +11,6 @@ export type User = {
 
 @Injectable()
 export class UsersService {
-  private readonly users: User[] = [
-    {
-      id: 1,
-      email: 'anna@pg.edu.pl',
-      password: '123',
-    },
-    {
-      id: 2,
-      email: 'tomasz@pg.edu.pl',
-      password: '123',
-    },
-  ];
-
   private driver = driver(
     'neo4j+s://483c110d.databases.neo4j.io:7687',
     auth.basic('neo4j', 'udfXNjCFUrCUmVMP7hVDIdqRu6XCQfbNMjhdAHqLdDo'),
