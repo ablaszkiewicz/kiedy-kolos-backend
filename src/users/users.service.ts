@@ -1,16 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { auth, driver, Session, session as neo4jsession } from 'neo4j-driver';
-import { toString } from 'neo4j-driver-core';
-import { session } from 'passport';
 import { User } from 'src/entities/user.entity';
 import { Repository } from 'typeorm';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(User) private usersRepository: Repository<User>,
-  ) {
+  constructor(@InjectRepository(User) private usersRepository: Repository<User>) {
     this.initialize();
   }
 

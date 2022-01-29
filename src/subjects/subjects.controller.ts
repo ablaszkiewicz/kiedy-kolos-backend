@@ -1,4 +1,15 @@
-import { Controller, Get, UseGuards, Request, HttpException, HttpStatus, Body, Post, Param } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  UseGuards,
+  Request,
+  HttpException,
+  HttpStatus,
+  Body,
+  Post,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Subject } from 'src/entities/subject.entity';
 import { UsersService } from 'src/users/users.service';
@@ -23,10 +34,23 @@ export class SubjectsController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Post('subjects')
+  @Post('users/me/subjects')
   async createSubjectForUser(@Request() req, @Body() body): Promise<Subject> {
     const user = await this.usersService.getOneById(req.user.id);
 
     return this.subjectsService.createSubject(body.name, user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('users/me/subjects/:id')
+  async deleteSubjectForUser(@Request() req, @Param('id') id): Promise<Subject> {
+    const user = await this.usersService.getOneById(req.user.id);
+    const subject = await this.subjectsService.getSubjectByIdAndOwner(id, user);
+
+    if (!subject) {
+      throw new HttpException('You are not the owner of provided subject', HttpStatus.BAD_REQUEST);
+    }
+
+    return this.subjectsService.deleteSubject(id);
   }
 }
