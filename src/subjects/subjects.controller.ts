@@ -14,6 +14,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Subject } from 'src/entities/subject.entity';
 import { UsersService } from 'src/users/users.service';
+import { CreateSubjectDTO } from './dto';
 import { SubjectsService } from './subjects.service';
 
 @ApiTags('subjects')
@@ -37,10 +38,10 @@ export class SubjectsController {
 
   @UseGuards(JwtAuthGuard)
   @Post('users/me/subjects')
-  async createSubjectForUser(@Request() req, @Body() body): Promise<Subject> {
+  async createSubjectForUser(@Request() req, @Body() body: CreateSubjectDTO): Promise<Subject> {
     const user = await this.usersService.getOneById(req.user.id);
 
-    return this.subjectsService.createSubject(body.name, user);
+    return this.subjectsService.createSubject(body.name, body.shortName, user);
   }
 
   @UseGuards(JwtAuthGuard)

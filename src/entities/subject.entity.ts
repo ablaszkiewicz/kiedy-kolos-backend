@@ -9,6 +9,9 @@ export class Subject {
   @Column()
   name: string;
 
+  @Column()
+  shortName: string;
+
   @ManyToOne(() => User)
   @JoinColumn()
   owner: User;

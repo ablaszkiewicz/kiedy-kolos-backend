@@ -32,8 +32,8 @@ export class SubjectsService {
     return this.subjectsRepository.find({ where: { owner: user } });
   }
 
-  async createSubject(name: string, owner: User): Promise<Subject> {
-    const newSubject = this.subjectsRepository.create({ name, owner });
+  async createSubject(name: string, shortName: string, owner: User): Promise<Subject> {
+    const newSubject = this.subjectsRepository.create({ name, shortName, owner });
     return this.subjectsRepository.save(newSubject);
   }
 
