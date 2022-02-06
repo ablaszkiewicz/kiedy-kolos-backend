@@ -10,11 +10,13 @@ import {
   Param,
   Delete,
 } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Subject } from 'src/entities/subject.entity';
 import { UsersService } from 'src/users/users.service';
 import { SubjectsService } from './subjects.service';
 
+@ApiTags('subjects')
 @Controller()
 export class SubjectsController {
   constructor(private subjectsService: SubjectsService, private usersService: UsersService) {}
