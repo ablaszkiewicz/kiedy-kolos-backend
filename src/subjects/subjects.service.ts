@@ -39,8 +39,8 @@ export class SubjectsService {
     return this.getSubjectById(id);
   }
 
-  async deleteSubject(id: number) {
-    const subject = await this.getSubjectById(id);
+  async deleteSubject(id: number, owner: number) {
+    const subject = await this.subjectsRepository.findOne({ where: { id: id, owner: owner } });
     console.log(subject);
     this.subjectsRepository.remove(subject);
     console.log(subject);

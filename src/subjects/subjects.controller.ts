@@ -49,21 +49,12 @@ export class SubjectsController {
   @UseGuards(JwtAuthGuard)
   @Put('users/me/subjects')
   async updateSubjectForUser(@Request() req, @Body() body: UpdateSubjectDTO): Promise<Subject> {
-    const user = await this.usersService.getOneById(req.user.id);
-
     return this.subjectsService.updateSubject(body.id, body.name, body.shortName);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('users/me/subjects/:id')
   async deleteSubjectForUser(@Request() req, @Param('id') id): Promise<Subject> {
-    const user = await this.usersService.getOneById(req.user.id);
-    const subject = await this.subjectsService.getSubjectByIdAndOwner(id, user);
-
-    if (!subject) {
-      throw new HttpException('You are not the owner of provided subject', HttpStatus.BAD_REQUEST);
-    }
-
-    return this.subjectsService.deleteSubject(id);
+    return this.subjectsService.deleteSubject(id, req.user.id);
   }
 }
