@@ -9,12 +9,14 @@ import {
   Post,
   Param,
   Delete,
+  Put,
 } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Subject } from 'src/entities/subject.entity';
 import { UsersService } from 'src/users/users.service';
-import { CreateSubjectDTO } from './dto';
+import { UpdateResult } from 'typeorm';
+import { CreateSubjectDTO, UpdateSubjectDTO } from './dto';
 import { SubjectsService } from './subjects.service';
 
 @ApiTags('subjects')
@@ -42,6 +44,14 @@ export class SubjectsController {
     const user = await this.usersService.getOneById(req.user.id);
 
     return this.subjectsService.createSubject(body.name, body.shortName, user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Put('users/me/subjects')
+  async updateSubjectForUser(@Request() req, @Body() body: UpdateSubjectDTO): Promise<Subject> {
+    const user = await this.usersService.getOneById(req.user.id);
+
+    return this.subjectsService.updateSubject(body.id, body.name, body.shortName);
   }
 
   @UseGuards(JwtAuthGuard)

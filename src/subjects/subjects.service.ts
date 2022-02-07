@@ -3,7 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Subject } from 'src/entities/subject.entity';
 import { User } from 'src/entities/user.entity';
 import { UsersService } from 'src/users/users.service';
-import { Repository } from 'typeorm';
+import { Repository, UpdateResult } from 'typeorm';
 
 @Injectable()
 export class SubjectsService {
@@ -32,6 +32,11 @@ export class SubjectsService {
   async createSubject(name: string, shortName: string, owner: User): Promise<Subject> {
     const newSubject = this.subjectsRepository.create({ name, shortName, owner });
     return this.subjectsRepository.save(newSubject);
+  }
+
+  async updateSubject(id: number, name: string, shortName: string): Promise<Subject> {
+    await this.subjectsRepository.update(id, { name: name, shortName: shortName });
+    return this.getSubjectById(id);
   }
 
   async deleteSubject(id: number) {
