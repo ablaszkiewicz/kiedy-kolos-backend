@@ -39,7 +39,7 @@ export class SubjectsController {
     return this.subjectsService.getSubjectsByOwner(user);
   }
 
-  @UseGuards(JwtAuthGuard, HasRightsGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('users/me/subjects')
   async createSubjectForUser(@Request() req, @Body() body: CreateSubjectDTO): Promise<Subject> {
     const user = await this.usersService.getOneById(req.user.id);
