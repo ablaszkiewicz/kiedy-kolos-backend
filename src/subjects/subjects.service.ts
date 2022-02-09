@@ -46,4 +46,12 @@ export class SubjectsService {
     console.log(subject);
     return subject;
   }
+
+  async isOwner(userId: number, subjectId: number) {
+    const subject = await this.subjectsRepository.findOne({ where: { id: subjectId, owner: userId } });
+    if (subject === undefined) {
+      return false;
+    }
+    return true;
+  }
 }
