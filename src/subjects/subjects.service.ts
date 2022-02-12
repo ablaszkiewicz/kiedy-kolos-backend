@@ -21,10 +21,6 @@ export class SubjectsService {
     return this.subjectsRepository.findOne({ where: { name: name } });
   }
 
-  async getSubjectByIdAndOwner(id: number, user: User): Promise<Subject> {
-    return this.subjectsRepository.findOne({ where: { id: id, owner: user } });
-  }
-
   async getSubjectsByOwner(user: User): Promise<Subject[]> {
     return this.subjectsRepository.find({ where: { owner: user } });
   }
@@ -39,11 +35,9 @@ export class SubjectsService {
     return this.getSubjectById(id);
   }
 
-  async deleteSubject(id: number, owner: number) {
-    const subject = await this.subjectsRepository.findOne({ where: { id: id, owner: owner } });
-    console.log(subject);
+  async deleteSubject(id: number) {
+    const subject = await this.subjectsRepository.findOne({ where: { id: id } });
     this.subjectsRepository.remove(subject);
-    console.log(subject);
     return subject;
   }
 

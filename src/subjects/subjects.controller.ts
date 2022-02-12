@@ -56,6 +56,6 @@ export class SubjectsController {
   @UseGuards(JwtAuthGuard, HasRightsGuard)
   @Delete('users/me/subjects/:id')
   async deleteSubjectForUser(@Request() req, @Param('id') id): Promise<Subject> {
-    return this.subjectsService.deleteSubject(id, req.user.id);
+    return this.subjectsService.deleteSubject(id);
   }
 }
