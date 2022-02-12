@@ -1,7 +1,9 @@
+import { YearCourse } from 'src/entities/yearCourse.entity';
+
 export interface CreateSubjectDTO {
   name: string;
   shortName: string;
-  owner: number;
+  yearCourse: YearCourse;
 }
 
 export interface UpdateSubjectDTO {

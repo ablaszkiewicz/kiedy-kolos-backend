@@ -2,6 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Subject } from 'src/entities/subject.entity';
 import { User } from 'src/entities/user.entity';
+import { YearCourse } from 'src/entities/yearCourse.entity';
 import { UsersService } from 'src/users/users.service';
 import { Repository, UpdateResult } from 'typeorm';
 
@@ -9,7 +10,7 @@ import { Repository, UpdateResult } from 'typeorm';
 export class SubjectsService {
   constructor(@InjectRepository(Subject) private subjectsRepository: Repository<Subject>) {}
 
-  async getAllSubjects(): Promise<Subject[]> {
+  async getAll(): Promise<Subject[]> {
     return this.subjectsRepository.find();
   }
 
@@ -21,27 +22,27 @@ export class SubjectsService {
     return this.subjectsRepository.findOne({ where: { name: name } });
   }
 
-  async getSubjectsByOwner(user: User): Promise<Subject[]> {
-    return this.subjectsRepository.find({ where: { owner: user } });
+  async getByYearCourse(yearCourse: YearCourse): Promise<Subject[]> {
+    return this.subjectsRepository.find({ where: { yearCourse: yearCourse } });
   }
 
-  async createSubject(name: string, shortName: string, owner: User): Promise<Subject> {
-    const newSubject = this.subjectsRepository.create({ name, shortName, owner });
+  async create(name: string, shortName: string, yearCourse: YearCourse): Promise<Subject> {
+    const newSubject = this.subjectsRepository.create({ name, shortName, yearCourse });
     return this.subjectsRepository.save(newSubject);
   }
 
-  async updateSubject(id: number, name: string, shortName: string): Promise<Subject> {
-    await this.subjectsRepository.update(id, { name: name, shortName: shortName });
+  async update(id: number, name: string, shortName: string, yearCourse: YearCourse): Promise<Subject> {
+    await this.subjectsRepository.update(id, { name: name, shortName: shortName, yearCourse: yearCourse });
     return this.getSubjectById(id);
   }
 
-  async deleteSubject(id: number) {
+  async delete(id: number): Promise<Subject> {
     const subject = await this.subjectsRepository.findOne({ where: { id: id } });
     this.subjectsRepository.remove(subject);
     return subject;
   }
 
-  async isOwner(userId: number, subjectId: number) {
+  async isOwner(userId: number, subjectId: number): Promise<boolean> {
     const subject = await this.subjectsRepository.findOne({ where: { id: subjectId, owner: userId } });
     if (subject === undefined) {
       return false;

@@ -9,5 +9,6 @@ import { YearCoursesService } from './year-courses.service';
   imports: [TypeOrmModule.forFeature([YearCourse]), UsersModule],
   controllers: [YearCoursesController],
   providers: [YearCoursesService],
+  exports: [YearCoursesService],
 })
 export class YearCoursesModule {}
