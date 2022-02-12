@@ -15,6 +15,7 @@ import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Subject } from 'src/entities/subject.entity';
 import { UsersService } from 'src/users/users.service';
+import { YearCoursesService } from 'src/year-courses/year-courses.service';
 import { UpdateResult } from 'typeorm';
 import { CreateSubjectDTO, UpdateSubjectDTO } from './dto';
 import { HasRightsGuard } from './guards/has-rights.guard';
@@ -23,39 +24,40 @@ import { SubjectsService } from './subjects.service';
 @ApiTags('subjects')
 @Controller()
 export class SubjectsController {
-  constructor(private subjectsService: SubjectsService, private usersService: UsersService) {}
+  constructor(private subjectsService: SubjectsService, private yearCourseService: YearCoursesService) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('subjects')
   async getSubjects(@Request() req): Promise<Subject[]> {
-    return this.subjectsService.getAllSubjects();
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('users/me/subjects')
-  async getSubjectsForUser(@Request() req): Promise<Subject[]> {
-    const user = await this.usersService.getOneById(req.user.id);
-
-    return this.subjectsService.getSubjectsByOwner(user);
-  }
-
-  @UseGuards(JwtAuthGuard)
-  @Post('users/me/subjects')
-  async createSubjectForUser(@Request() req, @Body() body: CreateSubjectDTO): Promise<Subject> {
-    const user = await this.usersService.getOneById(req.user.id);
-
-    return this.subjectsService.createSubject(body.name, body.shortName, user);
+    return this.subjectsService.getAll();
   }
 
   @UseGuards(JwtAuthGuard, HasRightsGuard)
-  @Put('users/me/subjects')
-  async updateSubjectForUser(@Request() req, @Body() body: UpdateSubjectDTO): Promise<Subject> {
-    return this.subjectsService.updateSubject(body.id, body.name, body.shortName);
+  @Get('yearCourses/:yearCourseId/subjects')
+  async getSubjectsForYearCourse(@Param('yearCourseId') yearCourseId): Promise<Subject[]> {
+    const yearCourse = await this.yearCourseService.getById(yearCourseId);
+
+    return this.subjectsService.getByYearCourse(yearCourse);
   }
 
   @UseGuards(JwtAuthGuard, HasRightsGuard)
-  @Delete('users/me/subjects/:id')
-  async deleteSubjectForUser(@Request() req, @Param('id') id): Promise<Subject> {
-    return this.subjectsService.deleteSubject(id, req.user.id);
+  @Post('yearCourses/:yearCourseId/subjects')
+  async createSubject(@Param('yearCourseId') yearCourseId, @Body() body: CreateSubjectDTO): Promise<Subject> {
+    const yearCourse = await this.yearCourseService.getById(yearCourseId);
+
+    return this.subjectsService.create(body.name, body.shortName, yearCourse);
+  }
+
+  @UseGuards(JwtAuthGuard, HasRightsGuard)
+  @Put('yearCourses/:yearCourseId/subjects')
+  async updateSubject(@Param('yearCourseId') yearCourseId, @Body() body: UpdateSubjectDTO): Promise<Subject> {
+    const yearCourse = await this.yearCourseService.getById(yearCourseId);
+    return this.subjectsService.update(body.id, body.name, body.shortName, yearCourse);
+  }
+
+  @UseGuards(JwtAuthGuard, HasRightsGuard)
+  @Delete('yearCourses/:yearCourseId/subjects/:id')
+  async deleteSubject(@Param('id') id): Promise<Subject> {
+    return this.subjectsService.delete(id);
   }
 }

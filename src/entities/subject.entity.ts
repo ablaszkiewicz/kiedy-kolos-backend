@@ -1,5 +1,6 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { User } from './user.entity';
+import { YearCourse } from './yearCourse.entity';
 
 @Entity()
 export class Subject {
@@ -12,7 +13,7 @@ export class Subject {
   @Column()
   shortName: string;
 
-  @ManyToOne(() => User)
+  @ManyToOne(() => YearCourse)
   @JoinColumn()
-  owner: User;
+  yearCourse: YearCourse;
 }
