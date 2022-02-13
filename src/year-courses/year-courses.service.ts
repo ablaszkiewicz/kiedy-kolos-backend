@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from 'src/entities/user.entity';
 import { YearCourse } from 'src/entities/yearCourse.entity';
-import { Repository } from 'typeorm';
+import { Repository, SelectQueryBuilder } from 'typeorm';
 
 @Injectable()
 export class YearCoursesService {
@@ -10,6 +10,13 @@ export class YearCoursesService {
 
   async getAll(): Promise<YearCourse[]> {
     return this.yearCourseRepository.find();
+  }
+
+  async getByUser(user: User): Promise<YearCourse[]> {
+    const query: SelectQueryBuilder<YearCourse> = this.yearCourseRepository.createQueryBuilder('y');
+    query.innerJoinAndSelect('y.admins', 'adminAlias');
+    query.where('adminAlias.id = :user', { user: user.id });
+    return query.getMany();
   }
 
   async getById(id: number): Promise<YearCourse> {
