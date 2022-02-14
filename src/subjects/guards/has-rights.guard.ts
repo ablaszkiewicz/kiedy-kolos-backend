@@ -7,7 +7,7 @@ export class HasRightsGuard implements CanActivate {
   constructor(private readonly subjectsService: SubjectsService, private yearCourseService: YearCoursesService) {}
   async canActivate(context: ExecutionContext): Promise<boolean> {
     const request = context.switchToHttp().getRequest();
-    const admins = await this.yearCourseService.getAdminsById(request.params.yearCourseId);
+    const admins = await this.yearCourseService.findAdminsById(request.params.yearCourseId);
     if (admins.some((admin) => admin.id == request.user.id)) {
       return true;
     } else {

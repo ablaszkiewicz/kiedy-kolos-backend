@@ -12,27 +12,27 @@ export class YearCoursesController {
 
   @UseGuards(JwtAuthGuard)
   @Get('yearCourses')
-  async getAllYearCourses(@Request() req) {
-    return this.yearCourseService.getAll();
+  async findAll(@Request() req) {
+    return this.yearCourseService.findAll();
   }
 
   @UseGuards(JwtAuthGuard)
   @Get('users/me/yearCourses')
-  async getYearCoursesForUser(@Request() req) {
+  async findByAdmin(@Request() req) {
     const user = await this.usersService.getOneById(req.user.id);
-    return this.yearCourseService.getByUser(user);
+    return this.yearCourseService.findByAdmin(user);
   }
 
   @UseGuards(JwtAuthGuard)
   @Post('yearCourses')
-  async addYearCourse(@Request() req, @Body() body: CreateYearCourseDTO) {
+  async create(@Request() req, @Body() body: CreateYearCourseDTO) {
     const user = await this.usersService.getOneById(req.user.id);
     return this.yearCourseService.create(user, body.name);
   }
 
   @UseGuards(JwtAuthGuard)
   @Delete('yearCourses/:id')
-  async deleteYearCourse(@Request() req, @Param() id: number) {
-    return this.yearCourseService.delete(id);
+  async remove(@Request() req, @Param() id: number) {
+    return this.yearCourseService.remove(id);
   }
 }

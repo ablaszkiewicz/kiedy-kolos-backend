@@ -8,22 +8,22 @@ import { Repository, SelectQueryBuilder } from 'typeorm';
 export class YearCoursesService {
   constructor(@InjectRepository(YearCourse) private yearCourseRepository: Repository<YearCourse>) {}
 
-  async getAll(): Promise<YearCourse[]> {
+  async findAll(): Promise<YearCourse[]> {
     return this.yearCourseRepository.find();
   }
 
-  async getByUser(user: User): Promise<YearCourse[]> {
+  async findByAdmin(user: User): Promise<YearCourse[]> {
     const query: SelectQueryBuilder<YearCourse> = this.yearCourseRepository.createQueryBuilder('y');
     query.innerJoinAndSelect('y.admins', 'adminAlias');
     query.where('adminAlias.id = :user', { user: user.id });
     return query.getMany();
   }
 
-  async getById(id: number): Promise<YearCourse> {
+  async findById(id: number): Promise<YearCourse> {
     return this.yearCourseRepository.findOne({ where: { id: id } });
   }
 
-  async getAdminsById(id: number): Promise<User[]> {
+  async findAdminsById(id: number): Promise<User[]> {
     return (await this.yearCourseRepository.findOne({ where: { id: id }, relations: ['admins'] })).admins;
   }
 
@@ -32,7 +32,7 @@ export class YearCoursesService {
     return this.yearCourseRepository.save(newYearCourse);
   }
 
-  async delete(id: number): Promise<YearCourse> {
+  async remove(id: number): Promise<YearCourse> {
     const yearCourse = await this.yearCourseRepository.findOne({ id: id });
     this.yearCourseRepository.remove(yearCourse);
     return yearCourse;

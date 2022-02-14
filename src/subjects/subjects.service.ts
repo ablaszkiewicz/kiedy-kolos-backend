@@ -10,19 +10,15 @@ import { Repository, UpdateResult } from 'typeorm';
 export class SubjectsService {
   constructor(@InjectRepository(Subject) private subjectsRepository: Repository<Subject>) {}
 
-  async getAll(): Promise<Subject[]> {
+  async findAll(): Promise<Subject[]> {
     return this.subjectsRepository.find();
   }
 
-  async getSubjectById(id: number): Promise<Subject | undefined> {
+  async findById(id: number): Promise<Subject | undefined> {
     return this.subjectsRepository.findOne({ where: { id: id } });
   }
 
-  async getSubjectByName(name: string): Promise<Subject | undefined> {
-    return this.subjectsRepository.findOne({ where: { name: name } });
-  }
-
-  async getByYearCourse(yearCourse: YearCourse): Promise<Subject[]> {
+  async findByYearCourse(yearCourse: YearCourse): Promise<Subject[]> {
     return this.subjectsRepository.find({ where: { yearCourse: yearCourse } });
   }
 
@@ -33,20 +29,12 @@ export class SubjectsService {
 
   async update(id: number, name: string, shortName: string, yearCourse: YearCourse): Promise<Subject> {
     await this.subjectsRepository.update(id, { name: name, shortName: shortName, yearCourse: yearCourse });
-    return this.getSubjectById(id);
+    return this.findById(id);
   }
 
-  async delete(id: number): Promise<Subject> {
+  async remove(id: number): Promise<Subject> {
     const subject = await this.subjectsRepository.findOne({ where: { id: id } });
     this.subjectsRepository.remove(subject);
     return subject;
-  }
-
-  async isOwner(userId: number, subjectId: number): Promise<boolean> {
-    const subject = await this.subjectsRepository.findOne({ where: { id: subjectId, owner: userId } });
-    if (subject === undefined) {
-      return false;
-    }
-    return true;
   }
 }
