@@ -15,7 +15,8 @@ import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Subject } from 'src/entities/subject.entity';
 import { YearCoursesService } from 'src/year-courses/year-courses.service';
-import { CreateSubjectDTO, UpdateSubjectDTO } from './dto';
+import { CreateSubjectDTO } from './dto/create-subject.dto';
+import { UpdateSubjectDTO } from './dto/update-subject.dto';
 import { HasRightsGuard } from './guards/has-rights.guard';
 import { SubjectsService } from './subjects.service';
 

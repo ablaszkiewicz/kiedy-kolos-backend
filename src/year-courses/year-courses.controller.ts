@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '
 import { ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UsersService } from 'src/users/users.service';
-import { CreateYearCourseDTO } from './dto';
+import { CreateYearCourseDTO } from './dto/create-year-course.dto';
 import { YearCoursesService } from './year-courses.service';
 
 @ApiTags('yearCourses')
