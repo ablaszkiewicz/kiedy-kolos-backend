@@ -10,8 +10,9 @@ import {
   Param,
   Delete,
   Put,
+  applyDecorators,
 } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiHeader, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { Subject } from 'src/entities/subject.entity';
 import { YearCoursesService } from 'src/year-courses/year-courses.service';
@@ -20,6 +21,7 @@ import { UpdateSubjectDTO } from './dto/update-subject.dto';
 import { HasRightsGuard } from './guards/has-rights.guard';
 import { SubjectsService } from './subjects.service';
 
+@ApiBearerAuth()
 @ApiTags('subjects')
 @Controller()
 export class SubjectsController {

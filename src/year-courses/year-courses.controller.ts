@@ -1,10 +1,11 @@
 import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
-import { ApiTags } from '@nestjs/swagger';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 import { UsersService } from 'src/users/users.service';
 import { CreateYearCourseDTO } from './dto/create-year-course.dto';
 import { YearCoursesService } from './year-courses.service';
 
+@ApiBearerAuth()
 @ApiTags('yearCourses')
 @Controller('')
 export class YearCoursesController {
