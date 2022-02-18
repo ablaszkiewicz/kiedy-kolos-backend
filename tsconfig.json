@@ -11,6 +11,14 @@
     "outDir": "./dist",
     "baseUrl": "./",
     "incremental": true,
-    "skipLibCheck": true
+    "skipLibCheck": true,
+
+    //needed to map absolute paths for Jest
+    "paths": {
+      "@App/*": [ "./src/*" ],
+    },
+
+    //needed for Jest to resolve .js entity files
+    "allowJs": true,
   }
 }

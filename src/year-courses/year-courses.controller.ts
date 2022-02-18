@@ -1,9 +1,10 @@
 import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { UsersService } from 'src/users/users.service';
+import { JwtAuthGuard } from '@App/auth/guards/jwt-auth.guard';
+import { UsersService } from '@App/users/users.service';
 import { CreateYearCourseDTO } from './dto/create-year-course.dto';
 import { YearCoursesService } from './year-courses.service';
+import { YearCourseParams } from './params/YearCourseParams';
 
 @ApiBearerAuth()
 @ApiTags('yearCourses')
@@ -13,7 +14,7 @@ export class YearCoursesController {
 
   @UseGuards(JwtAuthGuard)
   @Get('yearCourses')
-  async findAll(@Request() req) {
+  async findAll() {
     return this.yearCourseService.findAll();
   }
 
@@ -32,8 +33,8 @@ export class YearCoursesController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('yearCourses/:id')
-  async remove(@Request() req, @Param() id: number) {
-    return this.yearCourseService.remove(id);
+  @Delete('yearCourses/:yearCourseId')
+  async remove(@Request() req, @Param() params: YearCourseParams) {
+    return this.yearCourseService.remove(params.yearCourseId);
   }
 }

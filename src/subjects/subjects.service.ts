@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Subject } from 'src/entities/subject.entity';
-import { User } from 'src/entities/user.entity';
-import { YearCourse } from 'src/entities/yearCourse.entity';
-import { UsersService } from 'src/users/users.service';
+import { Subject } from '@App/entities/subject.entity';
+import { User } from '@App/entities/user.entity';
+import { YearCourse } from '@App/entities/yearCourse.entity';
+import { UsersService } from '@App/users/users.service';
 import { Repository, UpdateResult } from 'typeorm';
 
 @Injectable()

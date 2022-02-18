@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
-import { YearCourse } from 'src/entities/yearCourse.entity';
-import { UsersModule } from 'src/users/users.module';
+import { YearCourse } from '@App/entities/yearCourse.entity';
+import { UsersModule } from '@App/users/users.module';
 import { YearCoursesController } from './year-courses.controller';
 import { YearCoursesService } from './year-courses.service';
 
