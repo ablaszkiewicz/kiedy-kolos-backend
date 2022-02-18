@@ -1,6 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
 
-export class YearCourseParams {
+export class YearCourseWithSubjectParams {
   @ApiProperty()
   yearCourseId: number;
+
+  @ApiProperty()
+  subjectId: number;
 }
