@@ -1,5 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext, HttpException, HttpStatus } from '@nestjs/common';
-import { YearCoursesService } from 'src/year-courses/year-courses.service';
+import { YearCoursesService } from '@App/year-courses/year-courses.service';
 import { SubjectsService } from '../subjects.service';
 
 @Injectable()

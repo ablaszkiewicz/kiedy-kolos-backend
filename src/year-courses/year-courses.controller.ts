@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Param, Post, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
-import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
-import { UsersService } from 'src/users/users.service';
+import { JwtAuthGuard } from '@App/auth/guards/jwt-auth.guard';
+import { UsersService } from '@App/users/users.service';
 import { CreateYearCourseDTO } from './dto/create-year-course.dto';
 import { YearCoursesService } from './year-courses.service';
 import { YearCourseParams } from './params/YearCourseParams';
@@ -10,8 +10,7 @@ import { YearCourseParams } from './params/YearCourseParams';
 @ApiTags('yearCourses')
 @Controller('')
 export class YearCoursesController {
-  constructor(private readonly yearCourseService: YearCoursesService, private readonly usersService: UsersService) {
-  }
+  constructor(private readonly yearCourseService: YearCoursesService, private readonly usersService: UsersService) {}
 
   @UseGuards(JwtAuthGuard)
   @Get('yearCourses')

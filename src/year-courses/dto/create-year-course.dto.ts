@@ -1,5 +1,5 @@
 import { Length } from 'class-validator';
-import { User } from 'src/entities/user.entity';
+import { User } from '@App/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class CreateYearCourseDTO {
