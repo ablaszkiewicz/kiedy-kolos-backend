@@ -17,8 +17,5 @@
     "paths": {
       "@App/*": [ "./src/*" ],
     },
-
-    //needed for Jest to resolve .js entity files
-    "allowJs": true,
   }
 }

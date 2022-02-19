@@ -4,6 +4,8 @@ import { YearCourse } from '@App/entities/yearCourse.entity';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
 import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 
+const entities = [Subject, User, YearCourse];
+
 export const config: MysqlConnectionOptions = {
   type: 'mysql',
   host: process.env.DB_HOST,
@@ -11,13 +13,13 @@ export const config: MysqlConnectionOptions = {
   username: process.env.DB_USERNAME,
   password: process.env.DB_PASSWORD,
   database: process.env.DB_DATABASE,
-  entities: [Subject, User, YearCourse],
+  entities: entities,
   synchronize: true,
 };
 
 export const e2eConfig: SqliteConnectionOptions = {
   type: 'sqlite',
   database: ':memory:',
-  entities: [Subject, User, YearCourse],
+  entities: entities,
   synchronize: true,
 };
