@@ -3,9 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 
 export class UpdateSubjectDTO {
   @ApiProperty()
-  id: number;
-
-  @ApiProperty()
   @Length(1, 150)
   name: string;
 

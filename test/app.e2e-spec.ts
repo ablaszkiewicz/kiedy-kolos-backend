@@ -16,6 +16,10 @@ describe('E2e scenario', () => {
     await app.init();
   });
 
+  beforeEach(() => {
+    jest.useFakeTimers();
+  });
+
   it('create user', () => {
     return request(app.getHttpServer()).post('/users').send({ email: 'test@test.pl', password: '123456' }).expect(201);
   });
@@ -24,13 +28,39 @@ describe('E2e scenario', () => {
     return request(app.getHttpServer())
       .post('/auth/login')
       .send({ email: 'test@test.pl', password: '123456' })
-      .expect(201);
+      .expect(201)
+      .then((res) => (token = res.body.token));
   });
 
   it('create year course', () => {
     return request(app.getHttpServer())
       .post('/yearCourses')
-      .send({ email: 'test@test.pl', password: '123456' })
+      .auth(token, { type: 'bearer' })
+      .send({ name: 'test year course' })
       .expect(201);
+  });
+
+  it('create subject', () => {
+    return request(app.getHttpServer())
+      .post('/yearCourses/1/subjects')
+      .auth(token, { type: 'bearer' })
+      .send({ name: 'long name', shortName: 'short name' })
+      .expect(201);
+  });
+
+  it('update subject', () => {
+    return request(app.getHttpServer())
+      .put('/yearCourses/1/subjects/1')
+      .auth(token, { type: 'bearer' })
+      .send({ name: 'changed long name', shortName: 'changed short name' })
+      .expect(200);
+  });
+
+  it('delete subject', () => {
+    return request(app.getHttpServer()).delete('/yearCourses/1/subjects/1').auth(token, { type: 'bearer' }).expect(200);
+  });
+
+  it('delete year course', () => {
+    return request(app.getHttpServer()).delete('/yearCourses/1').auth(token, { type: 'bearer' }).expect(200);
   });
 });

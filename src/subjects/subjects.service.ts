@@ -34,7 +34,7 @@ export class SubjectsService {
 
   async remove(id: number): Promise<Subject> {
     const subject = await this.subjectsRepository.findOne({ where: { id: id } });
-    this.subjectsRepository.remove(subject);
+    await this.subjectsRepository.remove(subject);
     return subject;
   }
 }
