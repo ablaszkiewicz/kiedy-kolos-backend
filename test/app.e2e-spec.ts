@@ -36,7 +36,7 @@ describe('E2e scenario', () => {
     return request(app.getHttpServer())
       .post('/yearCourses')
       .auth(token, { type: 'bearer' })
-      .send({ name: 'test year course' })
+      .send({ name: 'name' })
       .expect(201);
   });
 
@@ -58,6 +58,14 @@ describe('E2e scenario', () => {
 
   it('delete subject', () => {
     return request(app.getHttpServer()).delete('/yearCourses/1/subjects/1').auth(token, { type: 'bearer' }).expect(200);
+  });
+
+  it('update year course', () => {
+    return request(app.getHttpServer())
+      .put('/yearCourses/1')
+      .auth(token, { type: 'bearer' })
+      .send({ name: 'updated name' })
+      .expect(200);
   });
 
   it('delete year course', () => {

@@ -42,8 +42,7 @@ export class SubjectsController {
   @UseGuards(JwtAuthGuard, HasRightsGuard)
   @Put('yearCourses/:yearCourseId/subjects/:subjectId')
   async update(@Param() params: YearCourseWithSubjectParams, @Body() body: UpdateSubjectDTO): Promise<Subject> {
-    const yearCourse: YearCourse = await this.yearCourseService.findById(params.yearCourseId);
-    return this.subjectsService.update(params.subjectId, body.name, body.shortName, yearCourse);
+    return this.subjectsService.update(params.subjectId, body.name, body.shortName);
   }
 
   @UseGuards(JwtAuthGuard, HasRightsGuard)

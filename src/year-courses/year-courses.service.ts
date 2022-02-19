@@ -32,6 +32,11 @@ export class YearCoursesService {
     return this.yearCourseRepository.save(newYearCourse);
   }
 
+  async update(id: number, name: string): Promise<YearCourse> {
+    await this.yearCourseRepository.update(id, { name: name });
+    return this.findById(id);
+  }
+
   async remove(id: number): Promise<YearCourse> {
     const yearCourse = await this.yearCourseRepository.findOne({ id: id });
     await this.yearCourseRepository.remove(yearCourse);

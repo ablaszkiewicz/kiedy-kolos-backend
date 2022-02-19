@@ -27,8 +27,8 @@ export class SubjectsService {
     return this.subjectsRepository.save(newSubject);
   }
 
-  async update(id: number, name: string, shortName: string, yearCourse: YearCourse): Promise<Subject> {
-    await this.subjectsRepository.update(id, { name: name, shortName: shortName, yearCourse: yearCourse });
+  async update(id: number, name: string, shortName: string): Promise<Subject> {
+    await this.subjectsRepository.update(id, { name: name, shortName: shortName });
     return this.findById(id);
   }
 
