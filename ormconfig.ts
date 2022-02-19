@@ -2,8 +2,9 @@ import { Subject } from '@App/entities/subject.entity';
 import { User } from '@App/entities/user.entity';
 import { YearCourse } from '@App/entities/yearCourse.entity';
 import { MysqlConnectionOptions } from 'typeorm/driver/mysql/MysqlConnectionOptions';
+import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionOptions';
 
-const config: MysqlConnectionOptions = {
+export const config: MysqlConnectionOptions = {
   type: 'mysql',
   host: process.env.DB_HOST,
   port: +process.env.DB_PORT,
@@ -14,4 +15,9 @@ const config: MysqlConnectionOptions = {
   synchronize: true,
 };
 
-export default config;
+export const e2eConfig: SqliteConnectionOptions = {
+  type: 'sqlite',
+  database: ':memory:',
+  entities: [Subject, User, YearCourse],
+  synchronize: true,
+};

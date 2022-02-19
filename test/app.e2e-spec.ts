@@ -5,6 +5,7 @@ import { INestApplication } from '@nestjs/common';
 
 describe('E2e scenario', () => {
   let app: INestApplication;
+  let token: string;
 
   beforeAll(async () => {
     const moduleFixture = await Test.createTestingModule({
@@ -15,10 +16,21 @@ describe('E2e scenario', () => {
     await app.init();
   });
 
-  it('/users (POST)', () => {
+  it('create user', () => {
+    return request(app.getHttpServer()).post('/users').send({ email: 'test@test.pl', password: '123456' }).expect(201);
+  });
+
+  it('login', () => {
     return request(app.getHttpServer())
-      .post('/users')
-      .send({ email: 'test2137@test.pl', password: '1234567' })
+      .post('/auth/login')
+      .send({ email: 'test@test.pl', password: '123456' })
+      .expect(201);
+  });
+
+  it('create year course', () => {
+    return request(app.getHttpServer())
+      .post('/yearCourses')
+      .send({ email: 'test@test.pl', password: '123456' })
       .expect(201);
   });
 });
