@@ -10,7 +10,6 @@ RUN npm install --only=development
 
 COPY . .
 
-RUN npm run test:e2e
 RUN npm run build
 
 FROM node:12.19.0-alpine3.9 as production

@@ -21,7 +21,7 @@ describe('E2e scenario', () => {
   });
 
   it('create user', () => {
-    return request(app.getHttpServer()).post('/users').send({ email: 'test@test.pl', password: '123456' }).expect(200);
+    return request(app.getHttpServer()).post('/users').send({ email: 'test@test.pl', password: '123456' }).expect(201);
   });
 
   it('login', () => {

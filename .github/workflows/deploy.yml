@@ -6,7 +6,16 @@ on:
       - 'main'
 
 jobs:
+  runs-on: ubuntu-latest
+  test:
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: npm install
+      - name: Run tests
+        run: JWT_SECRET=${{ secrets.JWT_SECRET }} npm run test:e2e
   build-and-push:
+    needs: test
     runs-on: ubuntu-latest
     steps:
       - name: Set up QEMU
