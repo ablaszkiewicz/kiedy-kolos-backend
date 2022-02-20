@@ -33,8 +33,8 @@ export class SubjectsService {
   }
 
   async remove(id: number): Promise<Subject> {
-    const subject = await this.subjectsRepository.findOne({ where: { id: id } });
-    await this.subjectsRepository.remove(subject);
+    const subject = await this.findById(id);
+    await this.subjectsRepository.delete(id);
     return subject;
   }
 }

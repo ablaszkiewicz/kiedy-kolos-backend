@@ -39,7 +39,7 @@ export class YearCoursesService {
 
   async remove(id: number): Promise<YearCourse> {
     const yearCourse = await this.yearCourseRepository.findOne({ id: id });
-    await this.yearCourseRepository.remove(yearCourse);
+    await this.yearCourseRepository.delete(yearCourse);
     return yearCourse;
   }
 }
