@@ -8,6 +8,6 @@ export class CreateYearCourseDTO {
 
   @ApiProperty()
   @Min(2015)
-  @Max(2022)
+  @Max(new Date().getFullYear())
   startYear: number;
 }
