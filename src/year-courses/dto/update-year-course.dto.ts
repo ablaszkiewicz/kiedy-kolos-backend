@@ -1,6 +1,7 @@
 import { Length, Max, Min } from 'class-validator';
 import { User } from '@App/entities/user.entity';
 import { ApiProperty } from '@nestjs/swagger';
+import { MAX_START_YEAR, MIN_START_YEAR } from '@App/entities/yearCourse.entity';
 
 export class UpdateYearCourseDTO {
   @ApiProperty()
@@ -8,7 +9,7 @@ export class UpdateYearCourseDTO {
   name: string;
 
   @ApiProperty()
-  @Min(2015)
-  @Max(new Date().getFullYear())
+  @Min(MIN_START_YEAR)
+  @Max(MAX_START_YEAR)
   startYear: number;
 }
