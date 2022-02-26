@@ -30,7 +30,7 @@ export class YearCoursesController {
   @Post('yearCourses')
   async create(@Request() req, @Body() body: CreateYearCourseDTO) {
     const user = await this.usersService.getOneById(req.user.id);
-    return this.yearCourseService.create(user, body.name);
+    return this.yearCourseService.create(user, body.name, body.startYear);
   }
 
   @UseGuards(JwtAuthGuard)

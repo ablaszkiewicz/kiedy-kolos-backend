@@ -27,8 +27,8 @@ export class YearCoursesService {
     return (await this.yearCourseRepository.findOne({ where: { id: id }, relations: ['admins'] })).admins;
   }
 
-  async create(admin: User, name: string): Promise<YearCourse> {
-    const newYearCourse = this.yearCourseRepository.create({ admins: [admin], name: name });
+  async create(admin: User, name: string, startYear: number): Promise<YearCourse> {
+    const newYearCourse = this.yearCourseRepository.create({ admins: [admin], name: name, startYear: startYear });
     return this.yearCourseRepository.save(newYearCourse);
   }
 

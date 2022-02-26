@@ -12,7 +12,7 @@ import { CreateSubjectDTO } from '@App/subjects/dto/create-subject.dto';
 describe('E2e scenario', () => {
   const mockUser: CreateUserDTO = { email: 'test@test.pl', password: '123456' };
   const updatedSubject: UpdateSubjectDTO = { name: 'changed long name', shortName: 'changed short name' };
-  const updatedYearCourse: UpdateYearCourseDTO = { name: 'updated name' };
+  const updatedYearCourse: UpdateYearCourseDTO = { name: 'updated name', startYear: new Date().getFullYear() };
   let app: INestApplication;
   let token: string;
 
@@ -30,13 +30,11 @@ describe('E2e scenario', () => {
   });
 
   it('should create user', async () => {
-    const response: Response = await request(app.getHttpServer())
-      .post('/users')
-      .send(mockUser);
+    const response: Response = await request(app.getHttpServer()).post('/users').send(mockUser);
 
     expect(response.status).toBe(HttpStatus.CREATED);
     expect(response.body).toMatchObject(mockUser);
-    expect(response.body).toHaveProperty("id");
+    expect(response.body).toHaveProperty('id');
   });
 
   it('should login', async () => {
@@ -44,23 +42,23 @@ describe('E2e scenario', () => {
       .post('/auth/login')
       .send({ email: 'test@test.pl', password: '123456' });
 
-    expect(response.status).toBe(HttpStatus.CREATED)
-    expect(response.body).toMatchObject({ email: 'test@test.pl'});
-    const properties: string[] = ["id", "token"];
+    expect(response.status).toBe(HttpStatus.CREATED);
+    expect(response.body).toMatchObject({ email: 'test@test.pl' });
+    const properties: string[] = ['id', 'token'];
     properties.forEach((property) => expect(response.body).toHaveProperty(property));
 
     token = response.body.token;
   });
 
   it('should create year course', async () => {
-    const createdYearCourse: CreateYearCourseDTO = { name: 'name' };
+    const createdYearCourse: CreateYearCourseDTO = { name: 'name', startYear: new Date().getFullYear() };
     const response: Response = await request(app.getHttpServer())
       .post('/yearCourses')
       .auth(token, { type: 'bearer' })
       .send(createdYearCourse);
 
     expect(response.status).toBe(HttpStatus.CREATED);
-    expect(response.body).toHaveProperty("id");
+    expect(response.body).toHaveProperty('id');
     expect(response.body).toMatchObject(createdYearCourse);
   });
 
@@ -72,7 +70,7 @@ describe('E2e scenario', () => {
       .send(createdSubject);
 
     expect(response.status).toBe(HttpStatus.CREATED);
-    expect(response.body).toHaveProperty("id");
+    expect(response.body).toHaveProperty('id');
     expect(response.body).toMatchObject(createdSubject);
   });
 
@@ -83,7 +81,7 @@ describe('E2e scenario', () => {
       .send(updatedSubject);
 
     expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toHaveProperty("id");
+    expect(response.body).toHaveProperty('id');
     expect(response.body).toMatchObject(updatedSubject);
   });
 
@@ -93,7 +91,7 @@ describe('E2e scenario', () => {
       .auth(token, { type: 'bearer' });
 
     expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toHaveProperty("id");
+    expect(response.body).toHaveProperty('id');
     expect(response.body).toMatchObject(updatedSubject);
   });
 
@@ -104,7 +102,7 @@ describe('E2e scenario', () => {
       .send(updatedYearCourse);
 
     expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toHaveProperty("id");
+    expect(response.body).toHaveProperty('id');
     expect(response.body).toMatchObject(updatedYearCourse);
   });
 
@@ -114,7 +112,7 @@ describe('E2e scenario', () => {
       .auth(token, { type: 'bearer' });
 
     expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toHaveProperty("id");
+    expect(response.body).toHaveProperty('id');
     expect(response.body).toMatchObject(updatedYearCourse);
   });
 });
