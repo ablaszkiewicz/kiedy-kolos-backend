@@ -9,6 +9,9 @@ export class YearCourse {
   @Column()
   name: string;
 
+  @Column()
+  startYear: number;
+
   @ManyToMany(() => User)
   @JoinTable()
   admins: User[];

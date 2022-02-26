@@ -36,7 +36,7 @@ export class YearCoursesController {
   @UseGuards(JwtAuthGuard)
   @Put('yearCourses/:yearCourseId')
   async update(@Param() params: YearCourseParams, @Body() body: UpdateYearCourseDTO) {
-    return this.yearCourseService.update(params.yearCourseId, body.name);
+    return this.yearCourseService.update(params.yearCourseId, body.name, body.startYear);
   }
 
   @UseGuards(JwtAuthGuard)
