@@ -32,8 +32,8 @@ export class YearCoursesService {
     return this.yearCourseRepository.save(newYearCourse);
   }
 
-  async update(id: number, name: string): Promise<YearCourse> {
-    await this.yearCourseRepository.update(id, { name: name });
+  async update(id: number, name: string, startYear: number): Promise<YearCourse> {
+    await this.yearCourseRepository.update(id, { name: name, startYear: startYear });
     return this.findById(id);
   }
 
