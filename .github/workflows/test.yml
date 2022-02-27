@@ -1,0 +1,16 @@
+name: E2E Tests
+
+on:
+  pull_request:
+    types:
+      - opened
+
+jobs:
+  test:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - name: Install modules
+        run: npm install
+      - name: Run tests
+        run: JWT_SECRET=test npm run test:e2e
