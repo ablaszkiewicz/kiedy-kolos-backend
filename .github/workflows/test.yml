@@ -6,7 +6,7 @@ on:
       - opened
 
 jobs:
-  pr-test:
+  prtest:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
