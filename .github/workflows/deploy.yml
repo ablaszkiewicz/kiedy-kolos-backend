@@ -4,6 +4,8 @@ on:
   push:
     branches:
       - 'main'
+    pull_request:
+      - 'main'
 
 jobs:
   test:
@@ -13,7 +15,7 @@ jobs:
       - name: Install modules
         run: npm install
       - name: Run tests
-        run: JWT_SECRET=${{ secrets.JWT_SECRET }} npm run test:e2e
+        run: JWT_SECRET=test npm run test:e2e
   build-and-push:
     needs: test
     runs-on: ubuntu-latest
