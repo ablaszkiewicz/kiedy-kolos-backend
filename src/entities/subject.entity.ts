@@ -12,7 +12,7 @@ export class Subject {
   @Column()
   shortName: string;
 
-  @ManyToOne(() => YearCourse)
+  @ManyToOne(() => YearCourse, { onDelete: 'CASCADE' })
   @JoinColumn()
   yearCourse: YearCourse;
 }
