@@ -8,7 +8,7 @@ import { Repository } from 'typeorm';
 export class GroupsService {
   constructor(@InjectRepository(Group) private groupsRepository: Repository<Group>) {}
 
-  async create(name: string, yearCourseId: number): Promise<Group> {
+  async create(name: string, yearCourseId: uuid): Promise<Group> {
     const group: Group = this.groupsRepository.create({ name: name, yearCourseId: yearCourseId });
     return this.groupsRepository.save(group);
   }
@@ -17,7 +17,7 @@ export class GroupsService {
     return this.groupsRepository.find();
   }
 
-  async getAllByYearCourse(yearCourseId: number): Promise<Group[]> {
+  async getAllByYearCourse(yearCourseId: uuid): Promise<Group[]> {
     return this.groupsRepository.find({ yearCourseId: yearCourseId });
   }
 

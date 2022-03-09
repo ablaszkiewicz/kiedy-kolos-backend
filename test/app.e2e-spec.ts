@@ -13,9 +13,9 @@ import { v4 as uuid } from 'uuid';
 import { UpdateGroupDto } from '@App/groups/dto/update-group.dto';
 
 describe('E2e scenario', () => {
-  let userId: number;
-  let subjectId: number;
-  let yearCourseId: number;
+  let userId: uuid;
+  let subjectId: uuid;
+  let yearCourseId: uuid;
   let groupId: uuid;
 
   const updatedSubject: UpdateSubjectDTO = { name: 'changed long name', shortName: 'changed short name' };

@@ -1,9 +1,10 @@
+import { v4 as uuid } from 'uuid';
 import { ApiProperty } from '@nestjs/swagger';
 
 export class YearCourseWithSubjectParams {
-  @ApiProperty()
-  yearCourseId: number;
+  @ApiProperty({ type: String, format: uuid })
+  yearCourseId: uuid;
 
-  @ApiProperty()
-  subjectId: number;
+  @ApiProperty({ type: String, format: uuid })
+  subjectId: uuid;
 }

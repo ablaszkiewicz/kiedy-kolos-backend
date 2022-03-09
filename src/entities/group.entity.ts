@@ -11,7 +11,7 @@ export class Group {
   name: string;
 
   @Column()
-  yearCourseId: number;
+  yearCourseId: uuid;
 
   @ManyToOne(() => YearCourse, { onDelete: 'CASCADE'})
   @JoinColumn({ name: "yearCourseId" })
