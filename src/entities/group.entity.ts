@@ -4,7 +4,7 @@ import { YearCourse } from '@App/entities/yearCourse.entity';
 
 @Entity()
 export class Group {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: uuid;
 
   @Column()
@@ -14,6 +14,6 @@ export class Group {
   yearCourseId: uuid;
 
   @ManyToOne(() => YearCourse, { onDelete: 'CASCADE'})
-  @JoinColumn({ name: "yearCourseId" })
+  @JoinColumn({ name: 'yearCourseId' })
   yearCourse: YearCourse;
 }
