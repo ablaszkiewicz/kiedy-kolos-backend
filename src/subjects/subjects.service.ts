@@ -1,10 +1,9 @@
+import { v4 as uuid } from 'uuid';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Subject } from '@App/entities/subject.entity';
-import { User } from '@App/entities/user.entity';
 import { YearCourse } from '@App/entities/yearCourse.entity';
-import { UsersService } from '@App/users/users.service';
-import { Repository, UpdateResult } from 'typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class SubjectsService {
@@ -14,7 +13,7 @@ export class SubjectsService {
     return this.subjectsRepository.find();
   }
 
-  async findById(id: number): Promise<Subject | undefined> {
+  async findById(id: uuid): Promise<Subject | undefined> {
     return this.subjectsRepository.findOne({ where: { id: id } });
   }
 
@@ -27,12 +26,12 @@ export class SubjectsService {
     return this.subjectsRepository.save(newSubject);
   }
 
-  async update(id: number, name: string, shortName: string): Promise<Subject> {
+  async update(id: uuid, name: string, shortName: string): Promise<Subject> {
     await this.subjectsRepository.update(id, { name: name, shortName: shortName });
     return this.findById(id);
   }
 
-  async remove(id: number): Promise<Subject> {
+  async remove(id: uuid): Promise<Subject> {
     const subject = await this.findById(id);
     await this.subjectsRepository.delete(id);
     return subject;

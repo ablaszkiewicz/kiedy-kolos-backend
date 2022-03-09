@@ -1,4 +1,5 @@
-import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
+import { v4 as uuid } from 'uuid';
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@App/entities/user.entity';
 import { Repository } from 'typeorm';
@@ -20,7 +21,7 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
-  async getOneById(id: number): Promise<User | undefined> {
+  async getOneById(id: uuid): Promise<User | undefined> {
     return this.usersRepository.findOne(id);
   }
 

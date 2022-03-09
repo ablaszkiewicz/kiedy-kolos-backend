@@ -1,3 +1,4 @@
+import { v4 as uuid } from 'uuid';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@App/entities/user.entity';
@@ -19,11 +20,11 @@ export class YearCoursesService {
     return query.getMany();
   }
 
-  async findById(id: number): Promise<YearCourse> {
+  async findById(id: uuid): Promise<YearCourse> {
     return this.yearCourseRepository.findOne({ where: { id: id } });
   }
 
-  async findAdminsById(id: number): Promise<User[]> {
+  async findAdminsById(id: uuid): Promise<User[]> {
     const yearCourse: YearCourse = await this.yearCourseRepository.findOne({ where: { id: id }, relations: ['admins'] });
     return yearCourse ? yearCourse.admins : [];
   }
@@ -33,12 +34,12 @@ export class YearCoursesService {
     return this.yearCourseRepository.save(newYearCourse);
   }
 
-  async update(id: number, name: string, startYear: number): Promise<YearCourse> {
+  async update(id: uuid, name: string, startYear: number): Promise<YearCourse> {
     await this.yearCourseRepository.update(id, { name: name, startYear: startYear });
     return this.findById(id);
   }
 
-  async remove(id: number): Promise<YearCourse> {
+  async remove(id: uuid): Promise<YearCourse> {
     const yearCourse = await this.yearCourseRepository.findOne({ id: id });
     await this.yearCourseRepository.delete(yearCourse);
     return yearCourse;

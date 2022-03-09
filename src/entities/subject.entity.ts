@@ -1,10 +1,11 @@
+import { v4 as uuid } from 'uuid';
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { YearCourse } from './yearCourse.entity';
 
 @Entity()
 export class Subject {
-  @PrimaryGeneratedColumn()
-  id: number;
+  @PrimaryGeneratedColumn('uuid')
+  id: uuid;
 
   @Column()
   name: string;
@@ -12,7 +13,10 @@ export class Subject {
   @Column()
   shortName: string;
 
+  @Column()
+  yearCourseId: uuid;
+
   @ManyToOne(() => YearCourse, { onDelete: 'CASCADE' })
-  @JoinColumn()
+  @JoinColumn({ name: 'yearCourseId' })
   yearCourse: YearCourse;
 }

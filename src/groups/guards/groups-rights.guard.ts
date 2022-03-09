@@ -1,3 +1,4 @@
+import { v4 as uuid } from 'uuid';
 import { CanActivate, ExecutionContext, HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { GroupsService } from '@App/groups/groups.service';
 import { YearCoursesService } from '@App/year-courses/year-courses.service';
@@ -12,7 +13,7 @@ export class GroupsRightsGuard implements CanActivate {
     const request = context.switchToHttp().getRequest();
     const requestParams = request.params;
 
-    let yearCourseId: number | undefined = undefined;
+    let yearCourseId: uuid | undefined = undefined;
 
     if(requestParams.yearCourseId) {
       yearCourseId = requestParams.yearCourseId;

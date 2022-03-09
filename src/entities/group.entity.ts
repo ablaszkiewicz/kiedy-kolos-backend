@@ -4,16 +4,16 @@ import { YearCourse } from '@App/entities/yearCourse.entity';
 
 @Entity()
 export class Group {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: uuid;
 
   @Column()
   name: string;
 
   @Column()
-  yearCourseId: number;
+  yearCourseId: uuid;
 
   @ManyToOne(() => YearCourse, { onDelete: 'CASCADE'})
-  @JoinColumn({ name: "yearCourseId" })
+  @JoinColumn({ name: 'yearCourseId' })
   yearCourse: YearCourse;
 }
