@@ -3,7 +3,8 @@ name: E2E Tests
 on:
   pull_request:
     types:
-      - [opened, synchronize]
+      - opened
+      - synchronize
 
 jobs:
   prtest:
