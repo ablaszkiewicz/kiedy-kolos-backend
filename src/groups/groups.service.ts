@@ -27,7 +27,7 @@ export class GroupsService {
 
   async update(id: uuid, name: string): Promise<Group> {
     await this.groupsRepository.update(id, { name: name });
-    return await this.getById(id);
+    return this.getById(id);
   }
 
   async delete(id: uuid): Promise<Group> {

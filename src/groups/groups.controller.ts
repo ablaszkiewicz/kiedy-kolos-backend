@@ -5,9 +5,9 @@ import { UpdateGroupDto } from './dto/update-group.dto';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GroupParams } from '@App/groups/params/GroupParams';
 import { Group } from '@App/entities/group.entity';
-import { YearCourseParams } from '@App/subjects/params/YearCourseParams';
 import { JwtAuthGuard } from '@App/auth/guards/jwt-auth.guard';
 import { GroupsRightsGuard } from '@App/groups/guards/groups-rights.guard';
+import { YearCourseParams } from '@App/groups/params/YearCourseParams';
 
 @ApiBearerAuth()
 @ApiTags('groups')
