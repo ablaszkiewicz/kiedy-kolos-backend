@@ -3,7 +3,6 @@ import { Test } from '@nestjs/testing';
 import { AppModule } from '@App/app.module';
 import { HttpStatus, INestApplication } from '@nestjs/common';
 import { Response } from 'superagent';
-import { CreateUserDTO } from '@App/users/dto/create-user.dto';
 import { UpdateYearCourseDTO } from '@App/year-courses/dto/update-year-course.dto';
 import { UpdateSubjectDTO } from '@App/subjects/dto/update-subject.dto';
 import { CreateYearCourseDTO } from '@App/year-courses/dto/create-year-course.dto';
@@ -11,16 +10,22 @@ import { CreateSubjectDTO } from '@App/subjects/dto/create-subject.dto';
 import { CreateGroupDto } from '@App/groups/dto/create-group.dto';
 import { v4 as uuid } from 'uuid';
 import { UpdateGroupDto } from '@App/groups/dto/update-group.dto';
+import { CreateUserDTO } from '@App/users/dto/create-user.dto';
+import { CreateEventDTO } from '@App/events/dto/create-event.dto';
+import { async } from 'rxjs';
+import { UpdateEventDTO } from '@App/events/dto/update-event.dto';
 
 describe('E2e scenario', () => {
   let userId: uuid;
   let subjectId: uuid;
   let yearCourseId: uuid;
   let groupId: uuid;
+  let eventId: uuid;
 
   const updatedSubject: UpdateSubjectDTO = { name: 'changed long name', shortName: 'changed short name' };
   const updatedYearCourse: UpdateYearCourseDTO = { name: 'updated name', startYear: new Date().getFullYear() };
   const updatedGroup: UpdateGroupDto = { name: 'updated group name' };
+  const updatedEvent: UpdateEventDTO = { date: new Date('March 30, 2022 21:37:00').toString() };
 
   let app: INestApplication;
   let token: string;
@@ -100,16 +105,6 @@ describe('E2e scenario', () => {
     expect(response.body).toMatchObject(updatedSubject);
   });
 
-  it('should delete subject', async () => {
-    const response: Response = await request(app.getHttpServer())
-      .delete('/yearCourses/' + yearCourseId + '/subjects/' + subjectId)
-      .auth(token, { type: 'bearer' });
-
-    expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toMatchObject(updatedSubject);
-  });
-
   it('should update year course', async () => {
     const response: Response = await request(app.getHttpServer())
       .put('/yearCourses/' + yearCourseId)
@@ -122,18 +117,17 @@ describe('E2e scenario', () => {
   });
 
   it('should create group', async () => {
-    const mockGroup: CreateGroupDto = { name: 'foo group bar' }
-    console.log('/yearCourse/' + yearCourseId + '/groups')
+    const mockGroup: CreateGroupDto = { name: 'foo group bar' };
     const response: Response = await request(app.getHttpServer())
       .post('/yearCourse/' + yearCourseId + '/groups')
       .auth(token, { type: 'bearer' })
       .send(mockGroup);
 
-      expect(response.status).toBe(HttpStatus.CREATED);
-      expect(response.body).toMatchObject(mockGroup);
-      expect(response.body).toHaveProperty('id');
+    expect(response.status).toBe(HttpStatus.CREATED);
+    expect(response.body).toMatchObject(mockGroup);
+    expect(response.body).toHaveProperty('id');
 
-      groupId = response.body.id;
+    groupId = response.body.id;
   });
 
   it('should update group', async () => {
@@ -155,6 +149,52 @@ describe('E2e scenario', () => {
     expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toHaveProperty('id');
     expect(response.body).toMatchObject(updatedGroup);
+  });
+
+  it('should create event', async () => {
+    const mockEvent: CreateEventDTO = { date: new Date('March 30, 2022 03:24:00').toString(), subjectId: subjectId };
+
+    const response: Response = await request(app.getHttpServer())
+      .post('/yearCourse/' + yearCourseId + '/events')
+      .auth(token, { type: 'bearer' })
+      .send(mockEvent);
+
+    expect(response.status).toBe(HttpStatus.CREATED);
+    expect(response.body).toMatchObject(mockEvent);
+    expect(response.body).toHaveProperty('id');
+
+    eventId = response.body.id;
+  });
+
+  it('should update event', async () => {
+    const response: Response = await request(app.getHttpServer())
+      .put('/events/' + eventId)
+      .auth(token, { type: 'bearer' })
+      .send(updatedEvent);
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body).toMatchObject(updatedEvent);
+    expect(response.body).toHaveProperty('id');
+  });
+
+  it('should delete event', async () => {
+    const response: Response = await request(app.getHttpServer())
+      .delete('/events/' + eventId)
+      .auth(token, { type: 'bearer' });
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body).toMatchObject(updatedEvent);
+    expect(response.body).toHaveProperty('id');
+  });
+
+  it('should delete subject', async () => {
+    const response: Response = await request(app.getHttpServer())
+      .delete('/yearCourses/' + yearCourseId + '/subjects/' + subjectId)
+      .auth(token, { type: 'bearer' });
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body).toHaveProperty('id');
+    expect(response.body).toMatchObject(updatedSubject);
   });
 
   it('should delete year course', async () => {

@@ -3,8 +3,8 @@ import { Event } from '@App/entities/event.entity';
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
-import { CreateEventDto } from './dto/create-event.dto';
-import { UpdateEventDto } from './dto/update-event.dto';
+import { CreateEventDTO } from './dto/create-event.dto';
+import { UpdateEventDTO } from './dto/update-event.dto';
 
 @Injectable()
 export class EventsService {
@@ -13,7 +13,7 @@ export class EventsService {
   async create(yearCourseId: uuid, date: string, subjectId: uuid): Promise<Event> {
     const event: Event = this.eventsRepository.create({
       yearCourseId: yearCourseId,
-      date: new Date(date),
+      date: date,
       subjectId: subjectId,
     });
     return this.eventsRepository.save(event);
@@ -32,7 +32,7 @@ export class EventsService {
   }
 
   async update(id: uuid, date: string): Promise<Event> {
-    await this.eventsRepository.update(id, { date: new Date(date) });
+    await this.eventsRepository.update(id, { date: date });
     return this.getById(id);
   }
 

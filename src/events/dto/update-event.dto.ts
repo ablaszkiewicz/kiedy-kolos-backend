@@ -1,7 +1,7 @@
 import { ApiProperty, PartialType } from '@nestjs/swagger';
-import { CreateEventDto } from './create-event.dto';
+import { CreateEventDTO } from './create-event.dto';
 
-export class UpdateEventDto {
+export class UpdateEventDTO {
   @ApiProperty()
   date: string;
 }

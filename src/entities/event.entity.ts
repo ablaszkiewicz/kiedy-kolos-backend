@@ -11,6 +11,7 @@ export class Event {
   @Column()
   date: Date;
 
+  @Column()
   subjectId: uuid;
 
   @ManyToOne(() => Subject, { onDelete: 'CASCADE' })
