@@ -20,11 +20,11 @@ export class EventsService {
   }
 
   async getAll(): Promise<Event[]> {
-    return this.eventsRepository.find();
+    return this.eventsRepository.find({ relations: ['subject'] });
   }
 
   async getAllByYearCourse(yearCourseId: uuid): Promise<Event[]> {
-    return this.eventsRepository.find({ yearCourseId: yearCourseId });
+    return this.eventsRepository.find({ where: { yearCourseId: yearCourseId }, relations: ['subject'] });
   }
 
   async getById(id: uuid): Promise<Event> {
