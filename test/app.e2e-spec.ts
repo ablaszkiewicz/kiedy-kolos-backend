@@ -12,12 +12,12 @@ import { v4 as uuid } from 'uuid';
 import { UpdateGroupDto } from '@App/groups/dto/update-group.dto';
 import { CreateUserDTO } from '@App/users/dto/create-user.dto';
 import { CreateEventDTO } from '@App/events/dto/create-event.dto';
-import { async } from 'rxjs';
 import { UpdateEventDTO } from '@App/events/dto/update-event.dto';
 
 describe('E2e scenario', () => {
   let userId: uuid;
   let subjectId: uuid;
+  let anotherSubjectId: uuid;
   let yearCourseId: uuid;
   let groupId: uuid;
   let eventId: uuid;
@@ -94,6 +94,20 @@ describe('E2e scenario', () => {
     subjectId = response.body.id;
   });
 
+  it('should create another subject', async () => {
+    const createdSubject: CreateSubjectDTO = { name: 'long name', shortName: 'short name' };
+    const response: Response = await request(app.getHttpServer())
+      .post('/yearCourses/' + yearCourseId + '/subjects')
+      .auth(token, { type: 'bearer' })
+      .send(createdSubject);
+
+    expect(response.status).toBe(HttpStatus.CREATED);
+    expect(response.body).toMatchObject(createdSubject);
+    expect(response.body).toHaveProperty('id');
+
+    updatedEvent.subjectId = response.body.id;
+  });
+
   it('should update subject', async () => {
     const response: Response = await request(app.getHttpServer())
       .put('/yearCourses/' + yearCourseId + '/subjects/' + subjectId)
@@ -167,8 +181,6 @@ describe('E2e scenario', () => {
   });
 
   it('should update event', async () => {
-    updatedEvent.subjectId = subjectId;
-
     const response: Response = await request(app.getHttpServer())
       .put('/events/' + eventId)
       .auth(token, { type: 'bearer' })
