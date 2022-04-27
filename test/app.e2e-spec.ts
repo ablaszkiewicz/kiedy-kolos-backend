@@ -25,7 +25,7 @@ describe('E2e scenario', () => {
   const updatedSubject: UpdateSubjectDTO = { name: 'changed long name', shortName: 'changed short name' };
   const updatedYearCourse: UpdateYearCourseDTO = { name: 'updated name', startYear: new Date().getFullYear() };
   const updatedGroup: UpdateGroupDto = { name: 'updated group name' };
-  const updatedEvent: UpdateEventDTO = { date: new Date('March 30, 2022 21:37:00').toString() };
+  const updatedEvent: UpdateEventDTO = { date: new Date('March 30, 2022 21:37:00').toString(), subjectId: subjectId };
 
   let app: INestApplication;
   let token: string;
@@ -167,6 +167,8 @@ describe('E2e scenario', () => {
   });
 
   it('should update event', async () => {
+    updatedEvent.subjectId = subjectId;
+
     const response: Response = await request(app.getHttpServer())
       .put('/events/' + eventId)
       .auth(token, { type: 'bearer' })
