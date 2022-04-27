@@ -33,16 +33,16 @@ export class SubjectsController {
 
   @UseGuards(JwtAuthGuard, HasRightsGuard)
   @Post('yearCourses/:yearCourseId/subjects')
-  async create(@Param() params: YearCourseParams, @Body() body: CreateSubjectDTO): Promise<Subject> {
+  async create(@Param() params: YearCourseParams, @Body() dto: CreateSubjectDTO): Promise<Subject> {
     const yearCourse: YearCourse = await this.yearCourseService.findById(params.yearCourseId);
 
-    return this.subjectsService.create(body.name, body.shortName, yearCourse);
+    return this.subjectsService.create(yearCourse, dto);
   }
 
   @UseGuards(JwtAuthGuard, HasRightsGuard)
   @Put('yearCourses/:yearCourseId/subjects/:subjectId')
-  async update(@Param() params: YearCourseWithSubjectParams, @Body() body: UpdateSubjectDTO): Promise<Subject> {
-    return this.subjectsService.update(params.subjectId, body.name, body.shortName);
+  async update(@Param() params: YearCourseWithSubjectParams, @Body() dto: UpdateSubjectDTO): Promise<Subject> {
+    return this.subjectsService.update(params.subjectId, dto);
   }
 
   @UseGuards(JwtAuthGuard, HasRightsGuard)

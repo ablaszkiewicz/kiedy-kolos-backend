@@ -15,12 +15,6 @@ import { YearCourseParams } from '@App/groups/params/YearCourseParams';
 export class GroupsController {
   constructor(private readonly groupsService: GroupsService) {}
 
-  @UseGuards(JwtAuthGuard, GroupsRightsGuard)
-  @Post('yearCourse/:yearCourseId/groups')
-  async create(@Param() params: YearCourseParams, @Body() body: CreateGroupDto): Promise<Group> {
-    return this.groupsService.create(body.name, params.yearCourseId);
-  }
-
   // todo: for debugging, delete later on
   @Get('groups')
   async getAll(): Promise<Group[]> {
@@ -40,9 +34,15 @@ export class GroupsController {
   }
 
   @UseGuards(JwtAuthGuard, GroupsRightsGuard)
+  @Post('yearCourse/:yearCourseId/groups')
+  async create(@Param() params: YearCourseParams, @Body() dto: CreateGroupDto): Promise<Group> {
+    return this.groupsService.create(params.yearCourseId, dto);
+  }
+
+  @UseGuards(JwtAuthGuard, GroupsRightsGuard)
   @Put('groups/:id')
-  async update(@Param() params: GroupParams, @Body() body: UpdateGroupDto): Promise<Group> {
-    return this.groupsService.update(params.id, body.name);
+  async update(@Param() params: GroupParams, @Body() dto: UpdateGroupDto): Promise<Group> {
+    return this.groupsService.update(params.id, dto);
   }
 
   @UseGuards(JwtAuthGuard, GroupsRightsGuard)

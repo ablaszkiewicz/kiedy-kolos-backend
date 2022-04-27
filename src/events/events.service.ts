@@ -10,15 +10,6 @@ import { UpdateEventDTO } from './dto/update-event.dto';
 export class EventsService {
   constructor(@InjectRepository(Event) private eventsRepository: Repository<Event>) {}
 
-  async create(yearCourseId: uuid, date: string, subjectId: uuid): Promise<Event> {
-    const event: Event = this.eventsRepository.create({
-      yearCourseId: yearCourseId,
-      date: date,
-      subjectId: subjectId,
-    });
-    return this.eventsRepository.save(event);
-  }
-
   async getAll(): Promise<Event[]> {
     return this.eventsRepository.find({ relations: ['subject'] });
   }
@@ -31,8 +22,17 @@ export class EventsService {
     return this.eventsRepository.findOne({ where: { id: id } });
   }
 
-  async update(id: uuid, date: string, subjectId: string): Promise<Event> {
-    await this.eventsRepository.update(id, { date, subjectId });
+  async create(yearCourseId: uuid, dto: CreateEventDTO): Promise<Event> {
+    const event: Event = this.eventsRepository.create({
+      yearCourseId: yearCourseId,
+      date: dto.date,
+      subjectId: dto.subjectId,
+    });
+    return this.eventsRepository.save(event);
+  }
+
+  async update(id: uuid, dto: UpdateEventDTO): Promise<Event> {
+    await this.eventsRepository.update(id, { date: dto.date, subjectId: dto.subjectId });
     return this.getById(id);
   }
 

@@ -28,15 +28,15 @@ export class YearCoursesController {
 
   @UseGuards(JwtAuthGuard)
   @Post('yearCourses')
-  async create(@Request() req, @Body() body: CreateYearCourseDTO) {
+  async create(@Request() req, @Body() dto: CreateYearCourseDTO) {
     const user = await this.usersService.getOneById(req.user.id);
-    return this.yearCourseService.create(user, body.name, body.startYear);
+    return this.yearCourseService.create(user, dto);
   }
 
   @UseGuards(JwtAuthGuard)
   @Put('yearCourses/:yearCourseId')
-  async update(@Param() params: YearCourseParams, @Body() body: UpdateYearCourseDTO) {
-    return this.yearCourseService.update(params.yearCourseId, body.name, body.startYear);
+  async update(@Param() params: YearCourseParams, @Body() dto: UpdateYearCourseDTO) {
+    return this.yearCourseService.update(params.yearCourseId, dto);
   }
 
   @UseGuards(JwtAuthGuard)

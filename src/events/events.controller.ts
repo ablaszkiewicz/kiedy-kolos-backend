@@ -20,13 +20,13 @@ export class EventsController {
   }
 
   @Post('yearCourse/:yearCourseId/events')
-  create(@Param() params: YearCourseParams, @Body() createEventDto: CreateEventDTO) {
-    return this.eventsService.create(params.yearCourseId, createEventDto.date, createEventDto.subjectId);
+  create(@Param() params: YearCourseParams, @Body() dto: CreateEventDTO) {
+    return this.eventsService.create(params.yearCourseId, dto);
   }
 
   @Put('events/:id')
-  update(@Param() params: EventsParams, @Body() updateEventDto: UpdateEventDTO) {
-    return this.eventsService.update(params.id, updateEventDto.date, updateEventDto.subjectId);
+  update(@Param() params: EventsParams, @Body() dto: UpdateEventDTO) {
+    return this.eventsService.update(params.id, dto);
   }
 
   @Delete('events/:id')

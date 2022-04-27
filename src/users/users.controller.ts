@@ -9,13 +9,8 @@ import { UsersService } from './users.service';
 export class UsersController {
   constructor(private usersService: UsersService) {}
 
-  @Get()
-  test(): string {
-    return 'hello';
-  }
-
   @Post()
-  async create(@Body() body: CreateUserDTO): Promise<User> {
-    return this.usersService.createUser(body.email, body.password);
+  async create(@Body() dto: CreateUserDTO): Promise<User> {
+    return this.usersService.createUser(dto);
   }
 }

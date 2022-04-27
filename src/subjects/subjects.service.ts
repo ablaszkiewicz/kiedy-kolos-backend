@@ -4,6 +4,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { Subject } from '@App/entities/subject.entity';
 import { YearCourse } from '@App/entities/yearCourse.entity';
 import { Repository } from 'typeorm';
+import { CreateSubjectDTO } from './dto/create-subject.dto';
 
 @Injectable()
 export class SubjectsService {
@@ -21,13 +22,13 @@ export class SubjectsService {
     return this.subjectsRepository.find({ where: { yearCourse: yearCourse } });
   }
 
-  async create(name: string, shortName: string, yearCourse: YearCourse): Promise<Subject> {
-    const newSubject = this.subjectsRepository.create({ name, shortName, yearCourse });
+  async create(yearCourse: YearCourse, dto: CreateSubjectDTO): Promise<Subject> {
+    const newSubject = this.subjectsRepository.create({ name: dto.name, shortName: dto.shortName, yearCourse });
     return this.subjectsRepository.save(newSubject);
   }
 
-  async update(id: uuid, name: string, shortName: string): Promise<Subject> {
-    await this.subjectsRepository.update(id, { name: name, shortName: shortName });
+  async update(id: uuid, dto): Promise<Subject> {
+    await this.subjectsRepository.update(id, { name: dto.name, shortName: dto.shortName });
     return this.findById(id);
   }
 

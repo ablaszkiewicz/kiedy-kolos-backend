@@ -4,6 +4,8 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@App/entities/user.entity';
 import { YearCourse } from '@App/entities/yearCourse.entity';
 import { Repository, SelectQueryBuilder } from 'typeorm';
+import { CreateYearCourseDTO } from './dto/create-year-course.dto';
+import { UpdateYearCourseDTO } from './dto/update-year-course.dto';
 
 @Injectable()
 export class YearCoursesService {
@@ -25,17 +27,24 @@ export class YearCoursesService {
   }
 
   async findAdminsById(id: uuid): Promise<User[]> {
-    const yearCourse: YearCourse = await this.yearCourseRepository.findOne({ where: { id: id }, relations: ['admins'] });
+    const yearCourse: YearCourse = await this.yearCourseRepository.findOne({
+      where: { id: id },
+      relations: ['admins'],
+    });
     return yearCourse ? yearCourse.admins : [];
   }
 
-  async create(admin: User, name: string, startYear: number): Promise<YearCourse> {
-    const newYearCourse = this.yearCourseRepository.create({ admins: [admin], name: name, startYear: startYear });
+  async create(admin: User, dto: CreateYearCourseDTO): Promise<YearCourse> {
+    const newYearCourse = this.yearCourseRepository.create({
+      admins: [admin],
+      name: dto.name,
+      startYear: dto.startYear,
+    });
     return this.yearCourseRepository.save(newYearCourse);
   }
 
-  async update(id: uuid, name: string, startYear: number): Promise<YearCourse> {
-    await this.yearCourseRepository.update(id, { name: name, startYear: startYear });
+  async update(id: uuid, dto: UpdateYearCourseDTO): Promise<YearCourse> {
+    await this.yearCourseRepository.update(id, { name: dto.name, startYear: dto.startYear });
     return this.findById(id);
   }
 
