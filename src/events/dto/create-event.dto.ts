@@ -5,5 +5,5 @@ export class CreateEventDTO {
   date: string;
 
   @ApiProperty()
-  subjectId: number;
+  subjectId: string;
 }

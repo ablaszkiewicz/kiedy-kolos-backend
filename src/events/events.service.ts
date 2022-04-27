@@ -31,8 +31,8 @@ export class EventsService {
     return this.eventsRepository.findOne({ where: { id: id } });
   }
 
-  async update(id: uuid, date: string): Promise<Event> {
-    await this.eventsRepository.update(id, { date: date });
+  async update(id: uuid, date: string, subjectId: string): Promise<Event> {
+    await this.eventsRepository.update(id, { date, subjectId });
     return this.getById(id);
   }
 

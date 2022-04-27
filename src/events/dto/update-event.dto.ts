@@ -4,4 +4,7 @@ import { CreateEventDTO } from './create-event.dto';
 export class UpdateEventDTO {
   @ApiProperty()
   date: string;
+
+  @ApiProperty()
+  subjectId: string;
 }

@@ -4,7 +4,6 @@ import { CreateEventDTO } from './dto/create-event.dto';
 import { UpdateEventDTO } from './dto/update-event.dto';
 import { YearCourseParams } from './params/YearCourseParams';
 import { EventsParams } from './params/EventsParams';
-import { GroupParams } from '@App/groups/params/GroupParams';
 
 @Controller('')
 export class EventsController {
@@ -26,8 +25,8 @@ export class EventsController {
   }
 
   @Put('events/:id')
-  update(@Param() params: GroupParams, @Body() updateEventDto: UpdateEventDTO) {
-    return this.eventsService.update(params.id, updateEventDto.date);
+  update(@Param() params: EventsParams, @Body() updateEventDto: UpdateEventDTO) {
+    return this.eventsService.update(params.id, updateEventDto.date, updateEventDto.subjectId);
   }
 
   @Delete('events/:id')
