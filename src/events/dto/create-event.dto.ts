@@ -9,4 +9,10 @@ export class CreateEventDTO {
 
   @ApiProperty()
   groups: string[];
+
+  @ApiProperty()
+  description: string;
+
+  @ApiProperty()
+  room: string;
 }

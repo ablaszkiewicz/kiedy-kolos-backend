@@ -35,6 +35,8 @@ export class EventsService {
       date: dto.date,
       subjectId: dto.subjectId,
       groups: groups,
+      description: dto.description,
+      room: dto.room,
     });
     return this.eventsRepository.save(event);
   }
@@ -46,6 +48,8 @@ export class EventsService {
     event.groups = groups;
     event.date = dto.date as any;
     event.subjectId = dto.subjectId;
+    event.description = dto.description;
+    event.room = dto.room;
 
     return this.eventsRepository.save(event);
   }

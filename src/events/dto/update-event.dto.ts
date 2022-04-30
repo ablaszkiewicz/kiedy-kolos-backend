@@ -10,4 +10,10 @@ export class UpdateEventDTO {
 
   @ApiProperty()
   groups: string[];
+
+  @ApiProperty()
+  description: string;
+
+  @ApiProperty()
+  room: string;
 }

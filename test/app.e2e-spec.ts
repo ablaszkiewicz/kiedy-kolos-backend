@@ -31,6 +31,8 @@ describe('E2e scenario', () => {
     date: new Date('March 30, 2022 21:37:00').toString(),
     subjectId: '',
     groups: [],
+    description: 'updated description',
+    room: '2137',
   };
 
   let app: INestApplication;
@@ -166,6 +168,8 @@ describe('E2e scenario', () => {
       date: new Date('March 30, 2022 03:24:00').toString(),
       subjectId: subjectId,
       groups: [groupId],
+      description: 'description',
+      room: '2137',
     };
 
     const expectedResponse = {

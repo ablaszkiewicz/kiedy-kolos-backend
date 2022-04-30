@@ -29,4 +29,10 @@ export class Event {
   @ManyToMany(() => Group, { cascade: true })
   @JoinTable()
   groups: Group[];
+
+  @Column()
+  description: string;
+
+  @Column()
+  room: string;
 }
