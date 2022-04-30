@@ -13,19 +13,25 @@ import { UpdateGroupDto } from '@App/groups/dto/update-group.dto';
 import { CreateUserDTO } from '@App/users/dto/create-user.dto';
 import { CreateEventDTO } from '@App/events/dto/create-event.dto';
 import { UpdateEventDTO } from '@App/events/dto/update-event.dto';
+import { group } from 'console';
+import { Group } from '@App/entities/group.entity';
 
 describe('E2e scenario', () => {
   let userId: uuid;
   let subjectId: uuid;
-  let anotherSubjectId: uuid;
   let yearCourseId: uuid;
   let groupId: uuid;
+  let secondGroup: Group;
   let eventId: uuid;
 
   const updatedSubject: UpdateSubjectDTO = { name: 'changed long name', shortName: 'changed short name' };
   const updatedYearCourse: UpdateYearCourseDTO = { name: 'updated name', startYear: new Date().getFullYear() };
   const updatedGroup: UpdateGroupDto = { name: 'updated group name' };
-  const updatedEvent: UpdateEventDTO = { date: new Date('March 30, 2022 21:37:00').toString(), subjectId: subjectId };
+  const updatedEvent: UpdateEventDTO = {
+    date: new Date('March 30, 2022 21:37:00').toString(),
+    subjectId: '',
+    groups: [],
+  };
 
   let app: INestApplication;
   let token: string;
@@ -155,18 +161,18 @@ describe('E2e scenario', () => {
     expect(response.body).toMatchObject(updatedGroup);
   });
 
-  it('should delete group', async () => {
-    const response: Response = await request(app.getHttpServer())
-      .delete('/groups/' + groupId)
-      .auth(token, { type: 'bearer' });
-
-    expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toMatchObject(updatedGroup);
-  });
-
   it('should create event', async () => {
-    const mockEvent: CreateEventDTO = { date: new Date('March 30, 2022 03:24:00').toString(), subjectId: subjectId };
+    const mockEvent: CreateEventDTO = {
+      date: new Date('March 30, 2022 03:24:00').toString(),
+      subjectId: subjectId,
+      groups: [groupId],
+    };
+
+    const expectedResponse = {
+      date: new Date('March 30, 2022 03:24:00').toString(),
+      subjectId: subjectId,
+      groups: [{ id: groupId }],
+    };
 
     const response: Response = await request(app.getHttpServer())
       .post('/yearCourse/' + yearCourseId + '/events')
@@ -174,8 +180,10 @@ describe('E2e scenario', () => {
       .send(mockEvent);
 
     expect(response.status).toBe(HttpStatus.CREATED);
-    expect(response.body).toMatchObject(mockEvent);
+    expect(response.body).toMatchObject(expectedResponse);
     expect(response.body).toHaveProperty('id');
+
+    console.log(response.body);
 
     eventId = response.body.id;
   });
@@ -209,6 +217,16 @@ describe('E2e scenario', () => {
     expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toHaveProperty('id');
     expect(response.body).toMatchObject(updatedSubject);
+  });
+
+  it('should delete group', async () => {
+    const response: Response = await request(app.getHttpServer())
+      .delete('/groups/' + groupId)
+      .auth(token, { type: 'bearer' });
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body).toHaveProperty('id');
+    expect(response.body).toMatchObject(updatedGroup);
   });
 
   it('should delete year course', async () => {

@@ -1,7 +1,8 @@
 import { v4 as uuid } from 'uuid';
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
 import { YearCourse } from '@App/entities/yearCourse.entity';
 import { Subject } from './subject.entity';
+import { Group } from './group.entity';
 
 @Entity()
 export class Event {
@@ -24,4 +25,8 @@ export class Event {
   @ManyToOne(() => YearCourse, { onDelete: 'CASCADE' })
   @JoinColumn({ name: 'yearCourseId' })
   yearCourse: YearCourse;
+
+  @ManyToMany(() => Group, { cascade: true })
+  @JoinTable()
+  groups: Group[];
 }

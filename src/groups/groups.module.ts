@@ -7,12 +7,9 @@ import { YearCoursesModule } from '@App/year-courses/year-courses.module';
 import { Group } from '@App/entities/group.entity';
 
 @Module({
-  imports: [
-    AuthModule,
-    TypeOrmModule.forFeature([Group]),
-    YearCoursesModule
-  ],
+  imports: [AuthModule, TypeOrmModule.forFeature([Group]), YearCoursesModule],
   controllers: [GroupsController],
-  providers: [GroupsService]
+  providers: [GroupsService],
+  exports: [GroupsService],
 })
 export class GroupsModule {}

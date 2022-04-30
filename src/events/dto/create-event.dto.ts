@@ -6,4 +6,7 @@ export class CreateEventDTO {
 
   @ApiProperty()
   subjectId: string;
+
+  @ApiProperty()
+  groups: string[];
 }

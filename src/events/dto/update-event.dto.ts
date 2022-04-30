@@ -7,4 +7,7 @@ export class UpdateEventDTO {
 
   @ApiProperty()
   subjectId: string;
+
+  @ApiProperty()
+  groups: string[];
 }
