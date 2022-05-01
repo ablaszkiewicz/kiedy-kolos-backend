@@ -4,7 +4,10 @@ import { CreateEventDTO } from './dto/create-event.dto';
 import { UpdateEventDTO } from './dto/update-event.dto';
 import { YearCourseParams } from './params/YearCourseParams';
 import { EventsParams } from './params/EventsParams';
+import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 
+@ApiBearerAuth()
+@ApiTags('events')
 @Controller('')
 export class EventsController {
   constructor(private readonly eventsService: EventsService) {}
