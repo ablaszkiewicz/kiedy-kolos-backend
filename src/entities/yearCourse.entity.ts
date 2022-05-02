@@ -7,7 +7,7 @@ export const MAX_START_YEAR = new Date().getFullYear();
 
 @Entity()
 export class YearCourse {
-  @PrimaryGeneratedColumn("uuid")
+  @PrimaryGeneratedColumn('uuid')
   id: uuid;
 
   @Column()
@@ -16,7 +16,7 @@ export class YearCourse {
   @Column()
   startYear: number;
 
-  @ManyToMany(() => User)
+  @ManyToMany(() => User, { cascade: true })
   @JoinTable()
   admins: User[];
 }

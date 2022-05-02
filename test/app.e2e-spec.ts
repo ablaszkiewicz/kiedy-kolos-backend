@@ -17,31 +17,19 @@ import { Group } from '@App/entities/group.entity';
 import { YearCourse } from '@App/entities/yearCourse.entity';
 import { Subject } from '@App/entities/subject.entity';
 import { Event } from '@App/entities/event.entity';
+import { User } from '@App/entities/user.entity';
+import { AddAdminDTO } from '@App/year-courses/dto/add-admin-dto';
+import { RemoveAdminDTO } from '@App/year-courses/dto/remove-admin.dto';
 
 describe('E2e scenario', () => {
+  let user: User;
+  let anotherUser: User;
   let yearCourse: YearCourse;
   let subject: Subject;
   let anotherSubject: Subject;
   let group: Group;
   let anotherGroup: Group;
   let event: Event;
-
-  // let subjectId: uuid;
-  // let yearCourseId: uuid;
-  // let groupId: uuid;
-  // let secondGroup: Group;
-  // let eventId: uuid;
-
-  // const updatedSubject: UpdateSubjectDTO = { name: 'changed long name', shortName: 'changed short name' };
-  // const updatedYearCourse: UpdateYearCourseDTO = { name: 'updated name', startYear: new Date().getFullYear() };
-  // const updatedGroup: UpdateGroupDto = { name: 'updated group name' };
-  // const updatedEvent: UpdateEventDTO = {
-  //   date: new Date('March 30, 2022 21:37:00').toString(),
-  //   subjectId: '',
-  //   groups: [],
-  //   description: 'updated description',
-  //   room: '2137',
-  // };
 
   let app: INestApplication;
   let token: string;
@@ -67,6 +55,20 @@ describe('E2e scenario', () => {
 
     expect(response.status).toBe(HttpStatus.CREATED);
     expect(response.body).toMatchObject(expectedResult);
+
+    user = response.body;
+  });
+
+  it('should create another user', async () => {
+    const createUserDto: CreateUserDTO = { email: 'another@test.pl', password: '123456' };
+    const expectedResult = { id: expect.any(String), email: 'another@test.pl', password: '123456' };
+
+    const response = await request(app.getHttpServer()).post('/users').send(createUserDto);
+
+    expect(response.status).toBe(HttpStatus.CREATED);
+    expect(response.body).toMatchObject(expectedResult);
+
+    anotherUser = response.body;
   });
 
   it('should login', async () => {
@@ -173,6 +175,38 @@ describe('E2e scenario', () => {
     expect(response.body).toMatchObject(expectedResult);
 
     yearCourse = response.body;
+  });
+
+  it('should add admin to year course', async () => {
+    const addAdminDto: AddAdminDTO = { email: anotherUser.email };
+    const expectedResult = {
+      id: yearCourse.id,
+      admins: [user, anotherUser],
+    };
+
+    const response = await request(app.getHttpServer())
+      .post('/yearCourses/' + yearCourse.id + '/admins')
+      .auth(token, { type: 'bearer' })
+      .send(addAdminDto);
+
+    expect(response.status).toBe(HttpStatus.CREATED);
+    expect(response.body).toMatchObject(expectedResult);
+  });
+
+  it('should remove admin from year course', async () => {
+    const removeAdminDto: RemoveAdminDTO = { email: anotherUser.email };
+    const expectedResult = {
+      id: yearCourse.id,
+      admins: [user],
+    };
+
+    const response = await request(app.getHttpServer())
+      .delete('/yearCourses/' + yearCourse.id + '/admins')
+      .auth(token, { type: 'bearer' })
+      .send(removeAdminDto);
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body).toMatchObject(expectedResult);
   });
 
   it('should create group', async () => {

@@ -12,7 +12,7 @@ export class YearCoursesService {
   constructor(@InjectRepository(YearCourse) private yearCourseRepository: Repository<YearCourse>) {}
 
   async findAll(): Promise<YearCourse[]> {
-    return this.yearCourseRepository.find();
+    return this.yearCourseRepository.find({ relations: ['admins'] });
   }
 
   async findByAdmin(user: User): Promise<YearCourse[]> {
@@ -23,7 +23,7 @@ export class YearCoursesService {
   }
 
   async findById(id: uuid): Promise<YearCourse> {
-    return this.yearCourseRepository.findOne({ where: { id: id } });
+    return this.yearCourseRepository.findOne({ where: { id: id }, relations: ['admins'] });
   }
 
   async findAdminsById(id: uuid): Promise<User[]> {
@@ -49,8 +49,21 @@ export class YearCoursesService {
   }
 
   async remove(id: uuid): Promise<YearCourse> {
-    const yearCourse = await this.yearCourseRepository.findOne({ id: id });
-    await this.yearCourseRepository.delete(yearCourse);
+    const yearCourse = await this.findById(id);
+    const yearCourseToDelete = await this.yearCourseRepository.findOne({ id: id });
+    await this.yearCourseRepository.delete(yearCourseToDelete);
     return yearCourse;
+  }
+
+  async addAdmin(id: uuid, admin: User): Promise<YearCourse> {
+    const yearCourse = await this.findById(id);
+    yearCourse.admins.push(admin);
+    return this.yearCourseRepository.save(yearCourse);
+  }
+
+  async removeAdmin(id: uuid, admin: User): Promise<YearCourse> {
+    const yearCourse = await this.findById(id);
+    yearCourse.admins = yearCourse.admins.filter((user) => user.id !== admin.id);
+    return this.yearCourseRepository.save(yearCourse);
   }
 }

@@ -6,6 +6,7 @@ import { CreateYearCourseDTO } from './dto/create-year-course.dto';
 import { YearCoursesService } from './year-courses.service';
 import { YearCourseParams } from './params/YearCourseParams';
 import { UpdateYearCourseDTO } from './dto/update-year-course.dto';
+import { AddAdminDTO } from './dto/add-admin-dto';
 
 @ApiBearerAuth()
 @ApiTags('yearCourses')
@@ -43,5 +44,19 @@ export class YearCoursesController {
   @Delete('yearCourses/:yearCourseId')
   async remove(@Param() params: YearCourseParams) {
     return this.yearCourseService.remove(params.yearCourseId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('yearCourses/:yearCourseId/admins')
+  async addAdmin(@Param() params: YearCourseParams, @Body() dto: AddAdminDTO) {
+    const user = await this.usersService.getOneByEmail(dto.email);
+    return this.yearCourseService.addAdmin(params.yearCourseId, user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('yearCourses/:yearCourseId/admins')
+  async removeAdmin(@Param() params: YearCourseParams, @Body() dto: AddAdminDTO) {
+    const user = await this.usersService.getOneByEmail(dto.email);
+    return this.yearCourseService.removeAdmin(params.yearCourseId, user);
   }
 }
