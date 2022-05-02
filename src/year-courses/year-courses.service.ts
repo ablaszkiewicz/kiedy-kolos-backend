@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@App/entities/user.entity';
 import { YearCourse } from '@App/entities/yearCourse.entity';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { In, Repository, SelectQueryBuilder } from 'typeorm';
 import { CreateYearCourseDTO } from './dto/create-year-course.dto';
 import { UpdateYearCourseDTO } from './dto/update-year-course.dto';
 
@@ -16,10 +16,13 @@ export class YearCoursesService {
   }
 
   async findByAdmin(user: User): Promise<YearCourse[]> {
-    const query: SelectQueryBuilder<YearCourse> = this.yearCourseRepository.createQueryBuilder('y');
+    let query = this.yearCourseRepository.createQueryBuilder('y');
     query.innerJoinAndSelect('y.admins', 'adminAlias');
     query.where('adminAlias.id = :user', { user: user.id });
-    return query.getMany();
+    query.select('y.id');
+
+    const ids = (await query.getMany()).map((y) => y.id);
+    return this.yearCourseRepository.find({ where: { id: In(ids) }, relations: ['admins'] });
   }
 
   async findById(id: uuid): Promise<YearCourse> {

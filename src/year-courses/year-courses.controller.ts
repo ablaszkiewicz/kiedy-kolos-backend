@@ -24,7 +24,9 @@ export class YearCoursesController {
   @Get('users/me/yearCourses')
   async findByAdmin(@Request() req) {
     const user = await this.usersService.getOneById(req.user.id);
-    return this.yearCourseService.findByAdmin(user);
+    const data = await this.yearCourseService.findByAdmin(user);
+    console.log(JSON.stringify(data));
+    return data;
   }
 
   @UseGuards(JwtAuthGuard)
