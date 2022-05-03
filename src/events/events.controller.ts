@@ -7,6 +7,7 @@ import { EventsParams } from './params/EventsParams';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@App/auth/guards/jwt-auth.guard';
 import { YearCourseAdminParamsGuard } from '@App/guards/year-course-admin-params-guard';
+import { YearCourseAdminEventGuard } from './guards/year-course-admin-event.guard';
 
 @ApiBearerAuth()
 @ApiTags('events')
@@ -32,13 +33,13 @@ export class EventsController {
     return this.eventsService.create(params.yearCourseId, dto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, YearCourseAdminEventGuard)
   @Put('events/:id')
   update(@Param() params: EventsParams, @Body() dto: UpdateEventDTO) {
     return this.eventsService.update(params.id, dto);
   }
 
-  @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard, YearCourseAdminEventGuard)
   @Delete('events/:id')
   delete(@Param() params: EventsParams) {
     return this.eventsService.delete(params.id);

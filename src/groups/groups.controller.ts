@@ -6,7 +6,7 @@ import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { GroupParams } from '@App/groups/params/GroupParams';
 import { Group } from '@App/entities/group.entity';
 import { JwtAuthGuard } from '@App/auth/guards/jwt-auth.guard';
-import { GroupsRightsGuard } from '@App/groups/guards/groups-rights.guard';
+import { YearCourseAdminGroupGuard } from '@App/groups/guards/year-course-admin-group.guard';
 import { YearCourseParams } from '@App/groups/params/YearCourseParams';
 import { YearCourseAdminParamsGuard } from '@App/guards/year-course-admin-params-guard';
 
@@ -40,13 +40,13 @@ export class GroupsController {
     return this.groupsService.create(params.yearCourseId, dto);
   }
 
-  @UseGuards(JwtAuthGuard, GroupsRightsGuard)
+  @UseGuards(JwtAuthGuard, YearCourseAdminGroupGuard)
   @Put('groups/:id')
   async update(@Param() params: GroupParams, @Body() dto: UpdateGroupDto): Promise<Group> {
     return this.groupsService.update(params.id, dto);
   }
 
-  @UseGuards(JwtAuthGuard, GroupsRightsGuard)
+  @UseGuards(JwtAuthGuard, YearCourseAdminGroupGuard)
   @Delete('groups/:id')
   async delete(@Param() params: GroupParams): Promise<Group> {
     return this.groupsService.delete(params.id);

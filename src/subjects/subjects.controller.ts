@@ -5,7 +5,7 @@ import { Subject } from '@App/entities/subject.entity';
 import { YearCoursesService } from '@App/year-courses/year-courses.service';
 import { CreateSubjectDTO } from './dto/create-subject.dto';
 import { UpdateSubjectDTO } from './dto/update-subject.dto';
-import { HasRightsGuard } from './guards/has-rights.guard';
+import { YearCourseAdminSubjectGuard } from './guards/year-course-admin-subject.guard';
 import { SubjectsService } from './subjects.service';
 import { YearCourseParams } from './params/YearCourseParams';
 import { YearCourse } from '../entities/yearCourse.entity';
