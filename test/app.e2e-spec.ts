@@ -13,27 +13,23 @@ import { UpdateGroupDto } from '@App/groups/dto/update-group.dto';
 import { CreateUserDTO } from '@App/users/dto/create-user.dto';
 import { CreateEventDTO } from '@App/events/dto/create-event.dto';
 import { UpdateEventDTO } from '@App/events/dto/update-event.dto';
-import { group } from 'console';
 import { Group } from '@App/entities/group.entity';
+import { YearCourse } from '@App/entities/yearCourse.entity';
+import { Subject } from '@App/entities/subject.entity';
+import { Event } from '@App/entities/event.entity';
+import { User } from '@App/entities/user.entity';
+import { AddAdminDTO } from '@App/year-courses/dto/add-admin-dto';
+import { RemoveAdminDTO } from '@App/year-courses/dto/remove-admin.dto';
 
 describe('E2e scenario', () => {
-  let userId: uuid;
-  let subjectId: uuid;
-  let yearCourseId: uuid;
-  let groupId: uuid;
-  let secondGroup: Group;
-  let eventId: uuid;
-
-  const updatedSubject: UpdateSubjectDTO = { name: 'changed long name', shortName: 'changed short name' };
-  const updatedYearCourse: UpdateYearCourseDTO = { name: 'updated name', startYear: new Date().getFullYear() };
-  const updatedGroup: UpdateGroupDto = { name: 'updated group name' };
-  const updatedEvent: UpdateEventDTO = {
-    date: new Date('March 30, 2022 21:37:00').toString(),
-    subjectId: '',
-    groups: [],
-    description: 'updated description',
-    room: '2137',
-  };
+  let user: User;
+  let anotherUser: User;
+  let yearCourse: YearCourse;
+  let subject: Subject;
+  let anotherSubject: Subject;
+  let group: Group;
+  let anotherGroup: Group;
+  let event: Event;
 
   let app: INestApplication;
   let token: string;
@@ -52,194 +48,299 @@ describe('E2e scenario', () => {
   });
 
   it('should create user', async () => {
-    const mockUser: CreateUserDTO = { email: 'test@test.pl', password: '123456' };
-    const response: Response = await request(app.getHttpServer()).post('/users').send(mockUser);
+    const createUserDto: CreateUserDTO = { email: 'test@test.pl', password: '123456' };
+    const expectedResult = { id: expect.any(String), email: 'test@test.pl', password: '123456' };
+
+    const response = await request(app.getHttpServer()).post('/users').send(createUserDto);
 
     expect(response.status).toBe(HttpStatus.CREATED);
-    expect(response.body).toMatchObject(mockUser);
-    expect(response.body).toHaveProperty('id');
-    userId = response.body.id;
+    expect(response.body).toMatchObject(expectedResult);
+
+    user = response.body;
+  });
+
+  it('should create another user', async () => {
+    const createUserDto: CreateUserDTO = { email: 'another@test.pl', password: '123456' };
+    const expectedResult = { id: expect.any(String), email: 'another@test.pl', password: '123456' };
+
+    const response = await request(app.getHttpServer()).post('/users').send(createUserDto);
+
+    expect(response.status).toBe(HttpStatus.CREATED);
+    expect(response.body).toMatchObject(expectedResult);
+
+    anotherUser = response.body;
   });
 
   it('should login', async () => {
-    const response: Response = await request(app.getHttpServer())
-      .post('/auth/login')
-      .send({ email: 'test@test.pl', password: '123456' });
+    const loginDto = { email: 'test@test.pl', password: '123456' };
+    const expectedResult = { id: expect.any(String), token: expect.any(String), email: 'test@test.pl' };
+
+    const response = await request(app.getHttpServer()).post('/auth/login').send(loginDto);
 
     expect(response.status).toBe(HttpStatus.CREATED);
-    expect(response.body).toMatchObject({ email: 'test@test.pl' });
-    const properties: string[] = ['id', 'token'];
-    properties.forEach((property) => expect(response.body).toHaveProperty(property));
+    expect(response.body).toMatchObject(expectedResult);
 
     token = response.body.token;
   });
 
   it('should create year course', async () => {
-    const createdYearCourse: CreateYearCourseDTO = { name: 'name', startYear: new Date().getFullYear() };
-    const response: Response = await request(app.getHttpServer())
+    const createYearCourseDto: CreateYearCourseDTO = { name: 'name', startYear: new Date().getFullYear() };
+    const expectedResult = { id: expect.any(String), name: 'name', startYear: new Date().getFullYear() };
+
+    const response = await request(app.getHttpServer())
       .post('/yearCourses')
       .auth(token, { type: 'bearer' })
-      .send(createdYearCourse);
+      .send(createYearCourseDto);
 
     expect(response.status).toBe(HttpStatus.CREATED);
-    expect(response.body).toMatchObject(createdYearCourse);
-    expect(response.body).toHaveProperty('id');
+    expect(response.body).toMatchObject(expectedResult);
 
-    yearCourseId = response.body.id;
+    yearCourse = response.body;
   });
 
   it('should create subject', async () => {
-    const createdSubject: CreateSubjectDTO = { name: 'long name', shortName: 'short name' };
-    const response: Response = await request(app.getHttpServer())
-      .post('/yearCourses/' + yearCourseId + '/subjects')
+    const createSubjectDto: CreateSubjectDTO = { name: 'long name', shortName: 'short name' };
+    const expectedResult = {
+      id: expect.any(String),
+      name: 'long name',
+      shortName: 'short name',
+      yearCourseId: yearCourse.id,
+    };
+
+    const response = await request(app.getHttpServer())
+      .post('/yearCourses/' + yearCourse.id + '/subjects')
       .auth(token, { type: 'bearer' })
-      .send(createdSubject);
+      .send(createSubjectDto);
 
     expect(response.status).toBe(HttpStatus.CREATED);
-    expect(response.body).toMatchObject(createdSubject);
-    expect(response.body).toHaveProperty('id');
+    expect(response.body).toMatchObject(expectedResult);
 
-    subjectId = response.body.id;
+    subject = response.body;
   });
 
   it('should create another subject', async () => {
-    const createdSubject: CreateSubjectDTO = { name: 'long name', shortName: 'short name' };
-    const response: Response = await request(app.getHttpServer())
-      .post('/yearCourses/' + yearCourseId + '/subjects')
+    const createSubjectDto: CreateSubjectDTO = { name: 'another long name', shortName: 'another short name' };
+    const expectedResult = {
+      id: expect.any(String),
+      name: 'another long name',
+      shortName: 'another short name',
+      yearCourseId: yearCourse.id,
+    };
+
+    const response = await request(app.getHttpServer())
+      .post('/yearCourses/' + yearCourse.id + '/subjects')
       .auth(token, { type: 'bearer' })
-      .send(createdSubject);
+      .send(createSubjectDto);
 
     expect(response.status).toBe(HttpStatus.CREATED);
-    expect(response.body).toMatchObject(createdSubject);
-    expect(response.body).toHaveProperty('id');
+    expect(response.body).toMatchObject(expectedResult);
 
-    updatedEvent.subjectId = response.body.id;
+    anotherSubject = response.body;
   });
 
   it('should update subject', async () => {
-    const response: Response = await request(app.getHttpServer())
-      .put('/yearCourses/' + yearCourseId + '/subjects/' + subjectId)
+    const updateSubjectDto: UpdateSubjectDTO = { name: 'updated long name', shortName: 'updated short name' };
+    const expectedResult = {
+      id: expect.any(String),
+      name: 'updated long name',
+      shortName: 'updated short name',
+      yearCourseId: yearCourse.id,
+    };
+
+    const response = await request(app.getHttpServer())
+      .put('/yearCourses/' + yearCourse.id + '/subjects/' + subject.id)
       .auth(token, { type: 'bearer' })
-      .send(updatedSubject);
+      .send(updateSubjectDto);
 
     expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toMatchObject(updatedSubject);
+    expect(response.body).toMatchObject(expectedResult);
+
+    subject = response.body;
   });
 
   it('should update year course', async () => {
-    const response: Response = await request(app.getHttpServer())
-      .put('/yearCourses/' + yearCourseId)
+    const updateYearCourseDto: UpdateYearCourseDTO = { name: 'updated name', startYear: new Date().getFullYear() };
+    const expectedResult = {
+      id: yearCourse.id,
+      name: 'updated name',
+      startYear: new Date().getFullYear(),
+    };
+
+    const response = await request(app.getHttpServer())
+      .put('/yearCourses/' + yearCourse.id)
       .auth(token, { type: 'bearer' })
-      .send(updatedYearCourse);
+      .send(updateYearCourseDto);
 
     expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toMatchObject(updatedYearCourse);
+    expect(response.body).toMatchObject(expectedResult);
+
+    yearCourse = response.body;
+  });
+
+  it('should add admin to year course', async () => {
+    const addAdminDto: AddAdminDTO = { email: anotherUser.email };
+    const expectedResult = {
+      id: yearCourse.id,
+      admins: [user, anotherUser],
+    };
+
+    const response = await request(app.getHttpServer())
+      .post('/yearCourses/' + yearCourse.id + '/admins')
+      .auth(token, { type: 'bearer' })
+      .send(addAdminDto);
+
+    expect(response.status).toBe(HttpStatus.CREATED);
+    expect(response.body).toMatchObject(expectedResult);
+  });
+
+  it('should remove admin from year course', async () => {
+    const expectedResult = {
+      id: yearCourse.id,
+      admins: [user],
+    };
+
+    const response = await request(app.getHttpServer())
+      .delete('/yearCourses/' + yearCourse.id + '/admins/' + anotherUser.id)
+      .auth(token, { type: 'bearer' });
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body).toMatchObject(expectedResult);
   });
 
   it('should create group', async () => {
-    const mockGroup: CreateGroupDto = { name: 'foo group bar' };
-    const response: Response = await request(app.getHttpServer())
-      .post('/yearCourse/' + yearCourseId + '/groups')
+    const createGroupDto: CreateGroupDto = { name: 'group name' };
+    const expectedResult = { id: expect.any(String), name: 'group name', yearCourseId: yearCourse.id };
+
+    const response = await request(app.getHttpServer())
+      .post('/yearCourse/' + yearCourse.id + '/groups')
       .auth(token, { type: 'bearer' })
-      .send(mockGroup);
+      .send(createGroupDto);
 
     expect(response.status).toBe(HttpStatus.CREATED);
-    expect(response.body).toMatchObject(mockGroup);
-    expect(response.body).toHaveProperty('id');
+    expect(response.body).toMatchObject(expectedResult);
 
-    groupId = response.body.id;
+    group = response.body;
+  });
+
+  it('should create another group', async () => {
+    const createGroupDto: CreateGroupDto = { name: 'another group name' };
+    const expectedResult = { id: expect.any(String), name: 'another group name', yearCourseId: yearCourse.id };
+
+    const response = await request(app.getHttpServer())
+      .post('/yearCourse/' + yearCourse.id + '/groups')
+      .auth(token, { type: 'bearer' })
+      .send(createGroupDto);
+
+    expect(response.status).toBe(HttpStatus.CREATED);
+    expect(response.body).toMatchObject(expectedResult);
+
+    anotherGroup = response.body;
   });
 
   it('should update group', async () => {
-    const response: Response = await request(app.getHttpServer())
-      .put('/groups/' + groupId)
+    const updateGroupDto: UpdateGroupDto = { name: 'updated group name' };
+    const expectedResult = { id: group.id, name: 'updated group name', yearCourseId: yearCourse.id };
+
+    const response = await request(app.getHttpServer())
+      .put('/groups/' + group.id)
       .auth(token, { type: 'bearer' })
-      .send(updatedGroup);
+      .send(updateGroupDto);
 
     expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toMatchObject(updatedGroup);
+    expect(response.body).toMatchObject(expectedResult);
+
+    group = response.body;
   });
 
   it('should create event', async () => {
     const mockEvent: CreateEventDTO = {
       date: new Date('March 30, 2022 03:24:00').toString(),
-      subjectId: subjectId,
-      groups: [groupId],
+      subjectId: subject.id,
+      groups: [group.id],
       description: 'description',
-      room: '2137',
+      room: 'room',
     };
 
     const expectedResponse = {
       date: new Date('March 30, 2022 03:24:00').toString(),
-      subjectId: subjectId,
-      groups: [{ id: groupId }],
+      subjectId: subject.id,
+      groups: [{ id: group.id }],
+      description: 'description',
+      room: 'room',
     };
 
-    const response: Response = await request(app.getHttpServer())
-      .post('/yearCourse/' + yearCourseId + '/events')
+    const response = await request(app.getHttpServer())
+      .post('/yearCourse/' + yearCourse.id + '/events')
       .auth(token, { type: 'bearer' })
       .send(mockEvent);
 
     expect(response.status).toBe(HttpStatus.CREATED);
     expect(response.body).toMatchObject(expectedResponse);
-    expect(response.body).toHaveProperty('id');
 
-    console.log(response.body);
-
-    eventId = response.body.id;
+    event = response.body;
   });
 
   it('should update event', async () => {
-    const response: Response = await request(app.getHttpServer())
-      .put('/events/' + eventId)
+    const updateEventDto: UpdateEventDTO = {
+      date: new Date('March 30, 2022 06:25:00').toString(),
+      subjectId: anotherSubject.id,
+      groups: [anotherGroup.id],
+      description: 'updated description',
+      room: 'updated room',
+    };
+
+    const expectedResponse = {
+      date: new Date('March 30, 2022 06:25:00').toString(),
+      subjectId: anotherSubject.id,
+      groups: [{ id: anotherGroup.id }],
+      description: 'updated description',
+      room: 'updated room',
+    };
+
+    const response = await request(app.getHttpServer())
+      .put('/events/' + event.id)
       .auth(token, { type: 'bearer' })
-      .send(updatedEvent);
+      .send(updateEventDto);
 
     expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toMatchObject(updatedEvent);
-    expect(response.body).toHaveProperty('id');
+    expect(response.body).toMatchObject(expectedResponse);
+
+    event = response.body;
   });
 
   it('should delete event', async () => {
-    const response: Response = await request(app.getHttpServer())
-      .delete('/events/' + eventId)
+    const response = await request(app.getHttpServer())
+      .delete('/events/' + event.id)
       .auth(token, { type: 'bearer' });
 
     expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toMatchObject(updatedEvent);
-    expect(response.body).toHaveProperty('id');
+    expect(response.body).toMatchObject(event);
   });
 
   it('should delete subject', async () => {
-    const response: Response = await request(app.getHttpServer())
-      .delete('/yearCourses/' + yearCourseId + '/subjects/' + subjectId)
+    const response = await request(app.getHttpServer())
+      .delete('/yearCourses/' + yearCourse.id + '/subjects/' + subject.id)
       .auth(token, { type: 'bearer' });
 
     expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toMatchObject(updatedSubject);
+    expect(response.body).toMatchObject(subject);
   });
 
   it('should delete group', async () => {
-    const response: Response = await request(app.getHttpServer())
-      .delete('/groups/' + groupId)
+    const response = await request(app.getHttpServer())
+      .delete('/groups/' + group.id)
       .auth(token, { type: 'bearer' });
 
     expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toMatchObject(updatedGroup);
+    expect(response.body).toMatchObject(group);
   });
 
   it('should delete year course', async () => {
-    const response: Response = await request(app.getHttpServer())
-      .delete('/yearCourses/' + yearCourseId)
+    const response = await request(app.getHttpServer())
+      .delete('/yearCourses/' + yearCourse.id)
       .auth(token, { type: 'bearer' });
 
     expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toHaveProperty('id');
-    expect(response.body).toMatchObject(updatedYearCourse);
+    expect(response.body).toMatchObject(yearCourse);
   });
 });

@@ -3,7 +3,7 @@ import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { User } from '@App/entities/user.entity';
 import { YearCourse } from '@App/entities/yearCourse.entity';
-import { Repository, SelectQueryBuilder } from 'typeorm';
+import { In, Repository, SelectQueryBuilder } from 'typeorm';
 import { CreateYearCourseDTO } from './dto/create-year-course.dto';
 import { UpdateYearCourseDTO } from './dto/update-year-course.dto';
 
@@ -12,18 +12,21 @@ export class YearCoursesService {
   constructor(@InjectRepository(YearCourse) private yearCourseRepository: Repository<YearCourse>) {}
 
   async findAll(): Promise<YearCourse[]> {
-    return this.yearCourseRepository.find();
+    return this.yearCourseRepository.find({ relations: ['admins'] });
   }
 
   async findByAdmin(user: User): Promise<YearCourse[]> {
-    const query: SelectQueryBuilder<YearCourse> = this.yearCourseRepository.createQueryBuilder('y');
+    let query = this.yearCourseRepository.createQueryBuilder('y');
     query.innerJoinAndSelect('y.admins', 'adminAlias');
     query.where('adminAlias.id = :user', { user: user.id });
-    return query.getMany();
+    query.select('y.id');
+
+    const ids = (await query.getMany()).map((y) => y.id);
+    return this.yearCourseRepository.find({ where: { id: In(ids) }, relations: ['admins'] });
   }
 
   async findById(id: uuid): Promise<YearCourse> {
-    return this.yearCourseRepository.findOne({ where: { id: id } });
+    return this.yearCourseRepository.findOne({ where: { id: id }, relations: ['admins'] });
   }
 
   async findAdminsById(id: uuid): Promise<User[]> {
@@ -49,8 +52,21 @@ export class YearCoursesService {
   }
 
   async remove(id: uuid): Promise<YearCourse> {
-    const yearCourse = await this.yearCourseRepository.findOne({ id: id });
-    await this.yearCourseRepository.delete(yearCourse);
+    const yearCourse = await this.findById(id);
+    const yearCourseToDelete = await this.yearCourseRepository.findOne({ id: id });
+    await this.yearCourseRepository.delete(yearCourseToDelete);
     return yearCourse;
+  }
+
+  async addAdmin(id: uuid, admin: User): Promise<YearCourse> {
+    const yearCourse = await this.findById(id);
+    yearCourse.admins.push(admin);
+    return this.yearCourseRepository.save(yearCourse);
+  }
+
+  async removeAdmin(id: uuid, admin: User): Promise<YearCourse> {
+    const yearCourse = await this.findById(id);
+    yearCourse.admins = yearCourse.admins.filter((user) => user.id !== admin.id);
+    return this.yearCourseRepository.save(yearCourse);
   }
 }
