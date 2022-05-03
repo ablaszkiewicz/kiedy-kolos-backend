@@ -194,16 +194,14 @@ describe('E2e scenario', () => {
   });
 
   it('should remove admin from year course', async () => {
-    const removeAdminDto: RemoveAdminDTO = { email: anotherUser.email };
     const expectedResult = {
       id: yearCourse.id,
       admins: [user],
     };
 
     const response = await request(app.getHttpServer())
-      .delete('/yearCourses/' + yearCourse.id + '/admins')
-      .auth(token, { type: 'bearer' })
-      .send(removeAdminDto);
+      .delete('/yearCourses/' + yearCourse.id + '/admins/' + anotherUser.id)
+      .auth(token, { type: 'bearer' });
 
     expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toMatchObject(expectedResult);

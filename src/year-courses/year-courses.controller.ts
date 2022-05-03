@@ -7,6 +7,7 @@ import { YearCoursesService } from './year-courses.service';
 import { YearCourseParams } from './params/YearCourseParams';
 import { UpdateYearCourseDTO } from './dto/update-year-course.dto';
 import { AddAdminDTO } from './dto/add-admin-dto';
+import { YearCourseAdminParams } from './params/YearCourseAdminParams';
 
 @ApiBearerAuth()
 @ApiTags('yearCourses')
@@ -24,9 +25,7 @@ export class YearCoursesController {
   @Get('users/me/yearCourses')
   async findByAdmin(@Request() req) {
     const user = await this.usersService.getOneById(req.user.id);
-    const data = await this.yearCourseService.findByAdmin(user);
-    console.log(JSON.stringify(data));
-    return data;
+    return this.yearCourseService.findByAdmin(user);
   }
 
   @UseGuards(JwtAuthGuard)
@@ -56,9 +55,11 @@ export class YearCoursesController {
   }
 
   @UseGuards(JwtAuthGuard)
-  @Delete('yearCourses/:yearCourseId/admins')
-  async removeAdmin(@Param() params: YearCourseParams, @Body() dto: AddAdminDTO) {
-    const user = await this.usersService.getOneByEmail(dto.email);
+  @Delete('yearCourses/:yearCourseId/admins/:adminId')
+  async removeAdmin(@Param() params: YearCourseAdminParams) {
+    const user = await this.usersService.getOneById(params.adminId);
+    console.log('Removing this admin');
+    console.log(user);
     return this.yearCourseService.removeAdmin(params.yearCourseId, user);
   }
 }
