@@ -6,9 +6,10 @@ import { UsersModule } from '@App/users/users.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Event } from '@App/entities/event.entity';
 import { GroupsModule } from '@App/groups/groups.module';
+import { YearCoursesModule } from '@App/year-courses/year-courses.module';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Event]), UsersModule, GroupsModule],
+  imports: [TypeOrmModule.forFeature([Event]), UsersModule, GroupsModule, YearCoursesModule],
   controllers: [EventsController],
   providers: [EventsService],
 })

@@ -8,6 +8,7 @@ import { Group } from '@App/entities/group.entity';
 import { JwtAuthGuard } from '@App/auth/guards/jwt-auth.guard';
 import { GroupsRightsGuard } from '@App/groups/guards/groups-rights.guard';
 import { YearCourseParams } from '@App/groups/params/YearCourseParams';
+import { YearCourseAdminParamsGuard } from '@App/guards/year-course-admin-params-guard';
 
 @ApiBearerAuth()
 @ApiTags('groups')
@@ -21,19 +22,19 @@ export class GroupsController {
     return this.groupsService.getAll();
   }
 
-  @UseGuards(JwtAuthGuard, GroupsRightsGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('yearCourse/:yearCourseId/groups')
   async getAllByYearCourse(@Param() params: YearCourseParams): Promise<Group[]> {
     return this.groupsService.getAllByYearCourse(params.yearCourseId);
   }
 
-  @UseGuards(JwtAuthGuard, GroupsRightsGuard)
+  @UseGuards(JwtAuthGuard)
   @Get('groups/:id')
   async getById(@Param() params: GroupParams): Promise<Group> {
     return this.groupsService.getById(params.id);
   }
 
-  @UseGuards(JwtAuthGuard, GroupsRightsGuard)
+  @UseGuards(JwtAuthGuard, YearCourseAdminParamsGuard)
   @Post('yearCourse/:yearCourseId/groups')
   async create(@Param() params: YearCourseParams, @Body() dto: CreateGroupDto): Promise<Group> {
     return this.groupsService.create(params.yearCourseId, dto);
