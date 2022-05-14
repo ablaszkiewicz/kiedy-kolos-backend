@@ -118,26 +118,6 @@ describe('E2e scenario', () => {
     subject = response.body;
   });
 
-  it('should create another subject', async () => {
-    const createSubjectDto: CreateSubjectDTO = { name: 'another long name', shortName: 'another short name' };
-    const expectedResult = {
-      id: expect.any(String),
-      name: 'another long name',
-      shortName: 'another short name',
-      yearCourseId: yearCourse.id,
-    };
-
-    const response = await request(app.getHttpServer())
-      .post('/yearCourses/' + yearCourse.id + '/subjects')
-      .auth(token, { type: 'bearer' })
-      .send(createSubjectDto);
-
-    expect(response.status).toBe(HttpStatus.CREATED);
-    expect(response.body).toMatchObject(expectedResult);
-
-    anotherSubject = response.body;
-  });
-
   it('should update subject', async () => {
     const updateSubjectDto: UpdateSubjectDTO = { name: 'updated long name', shortName: 'updated short name' };
     const expectedResult = {

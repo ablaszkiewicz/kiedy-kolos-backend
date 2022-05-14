@@ -6,6 +6,7 @@ import { YearCoursesModule } from './year-courses/year-courses.module';
 import { config, e2eConfig } from '../ormconfig';
 import { GroupsModule } from './groups/groups.module';
 import { EventsModule } from './events/events.module';
+import { ResultsModule } from './results/results.module';
 
 @Module({
   imports: [
@@ -15,6 +16,7 @@ import { EventsModule } from './events/events.module';
     YearCoursesModule,
     GroupsModule,
     EventsModule,
+    ResultsModule,
   ],
   controllers: [],
 })
