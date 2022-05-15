@@ -24,7 +24,7 @@ export class YearCoursesController {
 
   @UseGuards(JwtAuthGuard)
   @Get('users/me/yearCourses')
-  async findByAdmin(@Request() req) {
+  async findByAdminMe(@Request() req) {
     const user = await this.usersService.getOneById(req.user.id);
     return this.yearCourseService.findByAdmin(user);
   }
