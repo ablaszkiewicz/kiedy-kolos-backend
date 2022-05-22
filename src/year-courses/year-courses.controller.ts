@@ -59,8 +59,6 @@ export class YearCoursesController {
   @Delete('yearCourses/:yearCourseId/admins/:adminId')
   async removeAdmin(@Param() params: YearCourseAdminParams) {
     const user = await this.usersService.getOneById(params.adminId);
-    console.log('Removing this admin');
-    console.log(user);
     return this.yearCourseService.removeAdmin(params.yearCourseId, user);
   }
 }

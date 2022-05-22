@@ -26,15 +26,17 @@ export class YearCoursesService {
   }
 
   async findById(id: uuid): Promise<YearCourse> {
-    return this.yearCourseRepository.findOne({ where: { id: id }, relations: ['admins'] });
+    return this.yearCourseRepository
+      .createQueryBuilder('yearCourse')
+      .leftJoinAndSelect('yearCourse.admins', 'adminAlias')
+      .where('yearCourse.id = :id', { id: id })
+      .select(['yearCourse', 'adminAlias.id'])
+      .getOne();
   }
 
   async findAdminsById(id: uuid): Promise<User[]> {
-    const yearCourse: YearCourse = await this.yearCourseRepository.findOne({
-      where: { id: id },
-      relations: ['admins'],
-    });
-    return yearCourse ? yearCourse.admins : [];
+    const yearCourse = await this.findById(id);
+    return yearCourse.admins;
   }
 
   async create(admin: User, dto: CreateYearCourseDTO): Promise<YearCourse> {
@@ -61,14 +63,14 @@ export class YearCoursesService {
   async addAdmin(id: uuid, admin: User): Promise<YearCourse> {
     const yearCourse = await this.findById(id);
     yearCourse.admins.push(admin);
-    console.log('pushing admin');
-    console.log(yearCourse);
-    return this.yearCourseRepository.save(yearCourse);
+    await this.yearCourseRepository.save(yearCourse);
+    return this.findById(id);
   }
 
   async removeAdmin(id: uuid, admin: User): Promise<YearCourse> {
-    const yearCourse = await this.findById(id);
+    const yearCourse = await this.yearCourseRepository.findOne(id, { relations: ['admins'] });
     yearCourse.admins = yearCourse.admins.filter((user) => user.id !== admin.id);
-    return this.yearCourseRepository.save(yearCourse);
+    await this.yearCourseRepository.save(yearCourse);
+    return this.findById(id);
   }
 }
