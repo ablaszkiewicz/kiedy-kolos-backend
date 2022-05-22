@@ -24,7 +24,7 @@ export class YearCoursesController {
 
   @UseGuards(JwtAuthGuard)
   @Get('users/me/yearCourses')
-  async findByAdmin(@Request() req) {
+  async findByAdminMe(@Request() req) {
     const user = await this.usersService.getOneById(req.user.id);
     return this.yearCourseService.findByAdmin(user);
   }
@@ -42,13 +42,13 @@ export class YearCoursesController {
     return this.yearCourseService.update(params.yearCourseId, dto);
   }
 
-  @UseGuards(JwtAuthGuard, YearCourseAdminParamsGuard)
-  @Delete('yearCourses/:yearCourseId')
-  async remove(@Param() params: YearCourseParams) {
-    return this.yearCourseService.remove(params.yearCourseId);
-  }
+  // @UseGuards(JwtAuthGuard, YearCourseAdminParamsGuard)
+  // @Delete('yearCourses/:yearCourseId')
+  // async remove(@Param() params: YearCourseParams) {
+  //   return this.yearCourseService.remove(params.yearCourseId);
+  // }
 
-  @UseGuards(JwtAuthGuard, YearCourseAdminParamsGuard)
+  @UseGuards(JwtAuthGuard)
   @Post('yearCourses/:yearCourseId/admins')
   async addAdmin(@Param() params: YearCourseParams, @Body() dto: AddAdminDTO) {
     const user = await this.usersService.getOneByEmail(dto.email);

@@ -61,6 +61,8 @@ export class YearCoursesService {
   async addAdmin(id: uuid, admin: User): Promise<YearCourse> {
     const yearCourse = await this.findById(id);
     yearCourse.admins.push(admin);
+    console.log('pushing admin');
+    console.log(yearCourse);
     return this.yearCourseRepository.save(yearCourse);
   }
 
