@@ -44,7 +44,7 @@ export class ResultsService {
   }
 
   async checkTask1(user: User) {
-    const startDate = 2018;
+    const startDate = 1000;
     const id = (await this.resultsRepository.findOne({ where: { user: user } })).id;
 
     const yearCourses = await this.yearCoursesService.findByAdmin(user);
