@@ -315,12 +315,12 @@ describe('E2e scenario', () => {
     expect(response.body).toMatchObject(group);
   });
 
-  it('should delete year course', async () => {
-    const response = await request(app.getHttpServer())
-      .delete('/yearCourses/' + yearCourse.id)
-      .auth(token, { type: 'bearer' });
+  // it('should delete year course', async () => {
+  //   const response = await request(app.getHttpServer())
+  //     .delete('/yearCourses/' + yearCourse.id)
+  //     .auth(token, { type: 'bearer' });
 
-    expect(response.status).toBe(HttpStatus.OK);
-    expect(response.body).toMatchObject(yearCourse);
-  });
+  //   expect(response.status).toBe(HttpStatus.OK);
+  //   expect(response.body).toMatchObject(yearCourse);
+  // });
 });

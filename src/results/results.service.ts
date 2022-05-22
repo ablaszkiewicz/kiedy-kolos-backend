@@ -13,7 +13,7 @@ export class ResultsService {
     private yearCoursesService: YearCoursesService
   ) {}
 
-  sign(userId: string) {
+  async sign(userId: string) {
     const result = this.resultsRepository.create({
       userId: userId,
       task1: 0,
@@ -22,27 +22,29 @@ export class ResultsService {
       task4: 0,
     });
 
+    const currentResult = await this.resultsRepository.findOne({ where: { userId: userId } });
+
+    console.log(currentResult);
+
+    if (currentResult) {
+      return currentResult;
+    }
+
     return this.resultsRepository.save(result);
   }
 
   getAllResults() {
-    return this.resultsRepository.find();
+    return this.resultsRepository.find({ relations: ['user'] });
   }
 
   async getMyResults(userId: string) {
     const result = await this.resultsRepository.findOne({ where: { userId: userId } });
 
-    // result.task1 = 0;
-    // result.task2 = 0;
-    // result.task3 = 0;
-    // result.task4 = 0;
-
-    // await this.resultsRepository.save(result);
     return result;
   }
 
   async checkTask1(user: User) {
-    const startDate = 1000;
+    const startDate = 2018;
     const id = (await this.resultsRepository.findOne({ where: { user: user } })).id;
 
     const yearCourses = await this.yearCoursesService.findByAdmin(user);
@@ -65,7 +67,7 @@ export class ResultsService {
 
   async checkTask3(user: User) {
     const id = (await this.resultsRepository.findOne({ where: { user: user } })).id;
-    const uuid = '9511951e-9cdd-4797-a313-8daf45b1aa44';
+    const uuid = '29872d18-715d-446d-b341-0ddd262364dc';
 
     const yearCourses = await this.yearCoursesService.findByAdmin(user);
     console.log(yearCourses);
