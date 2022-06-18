@@ -21,4 +21,13 @@ export class AuthController {
   async login(@Request() req, @Body() body: DummyDto): Promise<any> {
     return this.authService.login(req.user);
   }
+
+  @Post('auth/google/login')
+  async googleLogin(@Body() body: GoogleBody) {
+    return this.authService.googleLogin(body.googleToken);
+  }
+}
+
+interface GoogleBody {
+  googleToken: string;
 }
