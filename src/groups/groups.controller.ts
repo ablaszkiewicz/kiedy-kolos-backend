@@ -22,7 +22,6 @@ export class GroupsController {
     return this.groupsService.getAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('yearCourse/:yearCourseId/groups')
   async getAllByYearCourse(@Param() params: YearCourseParams): Promise<Group[]> {
     return this.groupsService.getAllByYearCourse(params.yearCourseId);

@@ -24,7 +24,6 @@ export class SubjectsController {
     return this.subjectsService.findAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('yearCourses/:yearCourseId/subjects')
   async findByYearCourse(@Param() params: YearCourseParams): Promise<Subject[]> {
     const yearCourse: YearCourse = await this.yearCourseService.findById(params.yearCourseId);

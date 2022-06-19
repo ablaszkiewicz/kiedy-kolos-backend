@@ -21,7 +21,6 @@ export class EventsController {
     return this.eventsService.getAll();
   }
 
-  @UseGuards(JwtAuthGuard)
   @Get('yearCourse/:yearCourseId/events')
   getAllByYearCourse(@Param() params: YearCourseParams) {
     return this.eventsService.getAllByYearCourse(params.yearCourseId);
