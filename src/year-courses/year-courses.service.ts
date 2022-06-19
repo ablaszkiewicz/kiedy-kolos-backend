@@ -30,7 +30,7 @@ export class YearCoursesService {
       .createQueryBuilder('yearCourse')
       .leftJoinAndSelect('yearCourse.admins', 'adminAlias')
       .where('yearCourse.id = :id', { id: id })
-      .select(['yearCourse', 'adminAlias.id'])
+      .select(['yearCourse', 'adminAlias.id', 'adminAlias.email'])
       .getOne();
   }
 
