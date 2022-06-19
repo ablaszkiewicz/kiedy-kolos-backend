@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { User } from '@App/entities/user.entity';
 import { UsersService } from '@App/users/users.service';
-import { OAuth2Client } from 'google-auth-library';
+import axios from 'axios';
 
 @Injectable()
 export class AuthService {
@@ -29,13 +29,8 @@ export class AuthService {
   }
 
   async googleLogin(googleToken: string) {
-    const client = new OAuth2Client();
-    const ticket = await client.verifyIdToken({
-      idToken: googleToken,
-    });
-    const { email } = ticket.getPayload();
-
-    console.log(email);
+    const response = await axios.post(`https://www.googleapis.com/oauth2/v3/tokeninfo?access_token=${googleToken}`);
+    const email = response.data.email;
 
     let user = await this.usersService.getOneByEmail(email);
 
