@@ -181,7 +181,10 @@ describe('E2e scenario', () => {
     const addAdminDto: AddAdminDTO = { email: anotherUser.email };
     const expectedResult = {
       id: yearCourse.id,
-      admins: expect.arrayContaining([{ id: user.id }, { id: anotherUser.id }]),
+      admins: expect.arrayContaining([
+        { id: user.id, email: user.email },
+        { id: anotherUser.id, email: anotherUser.email },
+      ]),
     };
 
     const response = await request(app.getHttpServer())
@@ -196,7 +199,7 @@ describe('E2e scenario', () => {
   it('should remove admin from year course', async () => {
     const expectedResult = {
       id: yearCourse.id,
-      admins: expect.arrayContaining([{ id: user.id }]),
+      admins: expect.arrayContaining([{ id: user.id, email: user.email }]),
     };
 
     const response = await request(app.getHttpServer())
