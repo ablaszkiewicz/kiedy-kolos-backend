@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards } from '@nestjs/common';
+import { Controller, Get, Post, Body, Patch, Param, Delete, Put, UseGuards, Req } from '@nestjs/common';
 import { EventsService } from './events.service';
 import { CreateEventDTO } from './dto/create-event.dto';
 import { UpdateEventDTO } from './dto/update-event.dto';
@@ -23,7 +23,15 @@ export class EventsController {
 
   @Get('yearCourse/:yearCourseId/events')
   getAllByYearCourse(@Param() params: YearCourseParams) {
+    console.log('Getting without statuses');
     return this.eventsService.getAllByYearCourse(params.yearCourseId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Get('yearCourse/:yearCourseId/eventsWithStatuses')
+  getAllByYearCourseWithStatuses(@Req() req, @Param() params: YearCourseParams) {
+    console.log('Getting with statuses');
+    return this.eventsService.getAllByYearCourseWithStatuses(req.user.id, params.yearCourseId);
   }
 
   @UseGuards(JwtAuthGuard, YearCourseAdminParamsGuard)

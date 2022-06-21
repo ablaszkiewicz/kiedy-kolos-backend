@@ -7,6 +7,7 @@ import { config, e2eConfig } from '../ormconfig';
 import { GroupsModule } from './groups/groups.module';
 import { EventsModule } from './events/events.module';
 import { ResultsModule } from './results/results.module';
+import { EventStatusesModule } from './event-statuses/event-statuses.module';
 
 @Module({
   imports: [
@@ -17,6 +18,7 @@ import { ResultsModule } from './results/results.module';
     GroupsModule,
     EventsModule,
     ResultsModule,
+    EventStatusesModule,
   ],
   controllers: [],
 })

@@ -6,6 +6,7 @@ import { SqliteConnectionOptions } from 'typeorm/driver/sqlite/SqliteConnectionO
 import { Group } from '@App/entities/group.entity';
 import { Event } from '@App/entities/event.entity';
 import { Result } from '@App/entities/result.entity';
+import { EventStatus } from '@App/entities/event-status.entity';
 
 /*
   Be careful!
@@ -13,7 +14,7 @@ import { Result } from '@App/entities/result.entity';
     It causes db schema to sync if it detects there's a mismatch between db schema and entities.
     This behaviour may lead to an automatic table drop.
  */
-const entities = [Subject, User, YearCourse, Group, Event, Result];
+const entities = [Subject, User, YearCourse, Group, Event, Result, EventStatus];
 
 export const config: MysqlConnectionOptions = {
   type: 'mysql',

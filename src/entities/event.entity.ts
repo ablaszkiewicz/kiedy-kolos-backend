@@ -1,8 +1,18 @@
 import { v4 as uuid } from 'uuid';
-import { Column, Entity, JoinColumn, JoinTable, ManyToMany, ManyToOne, PrimaryGeneratedColumn } from 'typeorm';
+import {
+  Column,
+  Entity,
+  JoinColumn,
+  JoinTable,
+  ManyToMany,
+  ManyToOne,
+  OneToMany,
+  PrimaryGeneratedColumn,
+} from 'typeorm';
 import { YearCourse } from '@App/entities/yearCourse.entity';
 import { Subject } from './subject.entity';
 import { Group } from './group.entity';
+import { EventStatus, Status } from './event-status.entity';
 
 @Entity()
 export class Event {
@@ -35,4 +45,11 @@ export class Event {
 
   @Column()
   room: string;
+
+  @OneToMany(() => EventStatus, (status) => status.event)
+  statuses: EventStatus[];
+}
+
+export interface EventWithStatus extends Event {
+  status: Status;
 }
