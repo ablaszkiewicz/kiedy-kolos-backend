@@ -27,6 +27,6 @@ export class EventStatus {
   @Column()
   userId: string;
 
-  @Column({ enum: Status })
+  @Column()
   status: Status;
 }
