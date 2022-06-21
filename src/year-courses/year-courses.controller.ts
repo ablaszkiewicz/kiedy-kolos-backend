@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Param, Post, Put, Request, UseGuards } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Param, Post, Put, Req, Request, UseGuards } from '@nestjs/common';
 import { ApiBearerAuth, ApiTags } from '@nestjs/swagger';
 import { JwtAuthGuard } from '@App/auth/guards/jwt-auth.guard';
 import { UsersService } from '@App/users/users.service';
@@ -9,6 +9,7 @@ import { UpdateYearCourseDTO } from './dto/update-year-course.dto';
 import { AddAdminDTO } from './dto/add-admin-dto';
 import { YearCourseAdminParams } from './params/YearCourseAdminParams';
 import { YearCourseAdminParamsGuard } from '@App/guards/year-course-admin-params-guard';
+import { YearCourseUserParams } from './params/YearCourseUserParams';
 
 @ApiBearerAuth()
 @ApiTags('yearCourses')
@@ -29,9 +30,15 @@ export class YearCoursesController {
 
   @UseGuards(JwtAuthGuard)
   @Get('users/me/yearCourses')
-  async findByAdminMe(@Request() req) {
+  async findByAdminOrUserMe(@Request() req) {
     const user = await this.usersService.getOneById(req.user.id);
-    return this.yearCourseService.findByAdmin(user);
+
+    const byAdmin = await this.yearCourseService.findByAdmin(user);
+    const byUser = await this.yearCourseService.findByUser(user);
+
+    return [...byAdmin, ...byUser].filter(
+      (yearCourse, i, a) => a.findIndex((otherYearCourse) => otherYearCourse.id === yearCourse.id) === i
+    );
   }
 
   @UseGuards(JwtAuthGuard)
@@ -65,5 +72,19 @@ export class YearCoursesController {
   async removeAdmin(@Param() params: YearCourseAdminParams) {
     const user = await this.usersService.getOneById(params.adminId);
     return this.yearCourseService.removeAdmin(params.yearCourseId, user);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Post('yearCourses/:yearCourseId/users')
+  async addUser(@Req() req, @Param() params: YearCourseParams) {
+    const userId = req.user.id;
+    return this.yearCourseService.addUser(params.yearCourseId, userId);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Delete('yearCourses/:yearCourseId/users')
+  async removeUser(@Req() req, @Param() params: YearCourseUserParams) {
+    const userId = req.user.id;
+    return this.yearCourseService.removeUser(params.yearCourseId, userId);
   }
 }

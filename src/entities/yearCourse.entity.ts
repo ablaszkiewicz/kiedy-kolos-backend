@@ -20,4 +20,8 @@ export class YearCourse {
   @ManyToMany(() => User, { cascade: true })
   @JoinTable()
   admins: User[];
+
+  @ManyToMany(() => User, { cascade: true })
+  @JoinTable()
+  users: User[];
 }

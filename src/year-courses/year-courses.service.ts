@@ -6,13 +6,17 @@ import { YearCourse } from '@App/entities/yearCourse.entity';
 import { In, Repository, SelectQueryBuilder } from 'typeorm';
 import { CreateYearCourseDTO } from './dto/create-year-course.dto';
 import { UpdateYearCourseDTO } from './dto/update-year-course.dto';
+import { UsersService } from '@App/users/users.service';
 
 @Injectable()
 export class YearCoursesService {
-  constructor(@InjectRepository(YearCourse) private yearCourseRepository: Repository<YearCourse>) {}
+  constructor(
+    @InjectRepository(YearCourse) private yearCourseRepository: Repository<YearCourse>,
+    private usersService: UsersService
+  ) {}
 
   async findAll(): Promise<YearCourse[]> {
-    return this.yearCourseRepository.find({ relations: ['admins'] });
+    return this.yearCourseRepository.find();
   }
 
   async findByAdmin(user: User): Promise<YearCourse[]> {
@@ -22,15 +26,26 @@ export class YearCoursesService {
     query.select('y.id');
 
     const ids = (await query.getMany()).map((y) => y.id);
-    return this.yearCourseRepository.find({ where: { id: In(ids) }, relations: ['admins'] });
+    return this.yearCourseRepository.find({ where: { id: In(ids) }, relations: ['admins', 'users'] });
+  }
+
+  async findByUser(user: User): Promise<YearCourse[]> {
+    let query = this.yearCourseRepository.createQueryBuilder('y');
+    query.innerJoinAndSelect('y.users', 'user');
+    query.where('user.id = :user', { user: user.id });
+    query.select('y.id');
+
+    const ids = (await query.getMany()).map((y) => y.id);
+    return this.yearCourseRepository.find({ where: { id: In(ids) }, relations: ['admins', 'users'] });
   }
 
   async findById(id: uuid): Promise<YearCourse> {
     return this.yearCourseRepository
       .createQueryBuilder('yearCourse')
-      .leftJoinAndSelect('yearCourse.admins', 'adminAlias')
+      .leftJoinAndSelect('yearCourse.admins', 'admin')
+      .leftJoinAndSelect('yearCourse.users', 'user')
       .where('yearCourse.id = :id', { id: id })
-      .select(['yearCourse', 'adminAlias.id', 'adminAlias.email'])
+      .select(['yearCourse', 'admin.id', 'admin.email', 'user.id', 'user.email'])
       .getOne();
   }
 
@@ -70,6 +85,24 @@ export class YearCoursesService {
   async removeAdmin(id: uuid, admin: User): Promise<YearCourse> {
     const yearCourse = await this.yearCourseRepository.findOne(id, { relations: ['admins'] });
     yearCourse.admins = yearCourse.admins.filter((user) => user.id !== admin.id);
+    await this.yearCourseRepository.save(yearCourse);
+    return this.findById(id);
+  }
+
+  async addUser(id: uuid, userId: string): Promise<YearCourse> {
+    const yearCourse = await this.findById(id);
+    const user = await this.usersService.getOneById(userId);
+    if (!yearCourse.users.some((user) => user.id === userId)) {
+      yearCourse.users.push(user);
+      await this.yearCourseRepository.save(yearCourse);
+    }
+    console.log(yearCourse.users);
+    return this.findById(id);
+  }
+
+  async removeUser(id: uuid, userId: string): Promise<YearCourse> {
+    const yearCourse = await this.yearCourseRepository.findOne(id, { relations: ['users'] });
+    yearCourse.users = yearCourse.users.filter((user) => user.id !== userId);
     await this.yearCourseRepository.save(yearCourse);
     return this.findById(id);
   }
