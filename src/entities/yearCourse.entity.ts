@@ -17,11 +17,11 @@ export class YearCourse {
   @Column()
   startYear: number;
 
-  @ManyToMany(() => User, { cascade: true })
+  @ManyToMany(() => User, (user) => user.yearCoursesAdminOf, { cascade: true })
   @JoinTable()
   admins: User[];
 
-  @ManyToMany(() => User, { cascade: true })
+  @ManyToMany(() => User, (user) => user.yearCoursesUserOf, { cascade: true })
   @JoinTable()
   users: User[];
 }

@@ -27,20 +27,6 @@ export class YearCoursesController {
   async findById(@Param() params: YearCourseParams) {
     return this.yearCourseService.findById(params.yearCourseId);
   }
-
-  @UseGuards(JwtAuthGuard)
-  @Get('users/me/yearCourses')
-  async findByAdminOrUserMe(@Request() req) {
-    const user = await this.usersService.getOneById(req.user.id);
-
-    const byAdmin = await this.yearCourseService.findByAdmin(user);
-    const byUser = await this.yearCourseService.findByUser(user);
-
-    return [...byAdmin, ...byUser].filter(
-      (yearCourse, i, a) => a.findIndex((otherYearCourse) => otherYearCourse.id === yearCourse.id) === i
-    );
-  }
-
   @UseGuards(JwtAuthGuard)
   @Post('yearCourses')
   async create(@Request() req, @Body() dto: CreateYearCourseDTO) {

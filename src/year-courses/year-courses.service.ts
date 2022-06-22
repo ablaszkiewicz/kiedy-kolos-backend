@@ -26,17 +26,7 @@ export class YearCoursesService {
     query.select('y.id');
 
     const ids = (await query.getMany()).map((y) => y.id);
-    return this.yearCourseRepository.find({ where: { id: In(ids) }, relations: ['admins', 'users'] });
-  }
-
-  async findByUser(user: User): Promise<YearCourse[]> {
-    let query = this.yearCourseRepository.createQueryBuilder('y');
-    query.innerJoinAndSelect('y.users', 'user');
-    query.where('user.id = :user', { user: user.id });
-    query.select('y.id');
-
-    const ids = (await query.getMany()).map((y) => y.id);
-    return this.yearCourseRepository.find({ where: { id: In(ids) }, relations: ['admins', 'users'] });
+    return this.yearCourseRepository.find({ where: { id: In(ids) }, relations: ['admins'] });
   }
 
   async findById(id: uuid): Promise<YearCourse> {

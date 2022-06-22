@@ -210,6 +210,34 @@ describe('E2e scenario', () => {
     expect(response.body).toMatchObject(expectedResult);
   });
 
+  it('should add me to year course', async () => {
+    const expectedResult = {
+      ...yearCourse,
+      users: expect.arrayContaining([{ id: user.id, email: user.email }]),
+    };
+
+    const response = await request(app.getHttpServer())
+      .post('/yearCourses/' + yearCourse.id + '/users')
+      .auth(token, { type: 'bearer' });
+
+    expect(response.status).toBe(HttpStatus.CREATED);
+    expect(response.body).toMatchObject(expectedResult);
+  });
+
+  it('should remove me from year course', async () => {
+    const expectedResult = {
+      ...yearCourse,
+      users: [],
+    };
+
+    const response = await request(app.getHttpServer())
+      .delete('/yearCourses/' + yearCourse.id + '/users')
+      .auth(token, { type: 'bearer' });
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body).toMatchObject(expectedResult);
+  });
+
   it('should create group', async () => {
     const createGroupDto: CreateGroupDto = { name: 'group name' };
     const expectedResult = { id: expect.any(String), name: 'group name', yearCourseId: yearCourse.id };

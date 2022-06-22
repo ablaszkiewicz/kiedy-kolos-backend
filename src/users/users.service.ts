@@ -22,6 +22,13 @@ export class UsersService {
     return this.usersRepository.find();
   }
 
+  async getMyDetails(userId: string): Promise<User> {
+    return this.usersRepository.findOne({
+      where: { id: userId },
+      relations: ['yearCoursesAdminOf', 'yearCoursesUserOf'],
+    });
+  }
+
   async getOneById(id: uuid): Promise<User | undefined> {
     return this.usersRepository.findOne(id);
   }

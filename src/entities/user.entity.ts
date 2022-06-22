@@ -1,5 +1,6 @@
 import { v4 as uuid } from 'uuid';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Column, Entity, ManyToMany, PrimaryGeneratedColumn } from 'typeorm';
+import { YearCourse } from './yearCourse.entity';
 
 @Entity()
 export class User {
@@ -11,4 +12,10 @@ export class User {
 
   @Column()
   password: string;
+
+  @ManyToMany(() => YearCourse, (yearCourse) => yearCourse.admins)
+  yearCoursesAdminOf: YearCourse[];
+
+  @ManyToMany(() => YearCourse, (yearCourse) => yearCourse.users)
+  yearCoursesUserOf: YearCourse[];
 }
