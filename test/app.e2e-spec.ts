@@ -196,6 +196,21 @@ describe('E2e scenario', () => {
     expect(response.body).toMatchObject(expectedResult);
   });
 
+  it('should check whether user is admin', async () => {
+    const expectedResult = {
+      id: user.id,
+      email: user.email,
+      yearCoursesAdminOf: expect.arrayContaining([
+        { id: yearCourse.id, name: yearCourse.name, startYear: yearCourse.startYear },
+      ]),
+    };
+
+    const response = await request(app.getHttpServer()).get(`/users/me`).auth(token, { type: 'bearer' });
+
+    expect(response.status).toBe(HttpStatus.OK);
+    expect(response.body).toMatchObject(expectedResult);
+  });
+
   it('should remove admin from year course', async () => {
     const expectedResult = {
       id: yearCourse.id,
@@ -221,6 +236,21 @@ describe('E2e scenario', () => {
       .auth(token, { type: 'bearer' });
 
     expect(response.status).toBe(HttpStatus.CREATED);
+    expect(response.body).toMatchObject(expectedResult);
+  });
+
+  it('should check whether user is user of year course', async () => {
+    const expectedResult = {
+      id: user.id,
+      email: user.email,
+      yearCoursesUserOf: expect.arrayContaining([
+        { id: yearCourse.id, name: yearCourse.name, startYear: yearCourse.startYear },
+      ]),
+    };
+
+    const response = await request(app.getHttpServer()).get(`/users/me`).auth(token, { type: 'bearer' });
+
+    expect(response.status).toBe(HttpStatus.OK);
     expect(response.body).toMatchObject(expectedResult);
   });
 

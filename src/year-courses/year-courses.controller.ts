@@ -23,6 +23,7 @@ export class YearCoursesController {
     return this.yearCourseService.findAll();
   }
 
+  @UseGuards(JwtAuthGuard, YearCourseAdminParamsGuard)
   @Get('yearCourses/:yearCourseId')
   async findById(@Param() params: YearCourseParams) {
     return this.yearCourseService.findById(params.yearCourseId);
