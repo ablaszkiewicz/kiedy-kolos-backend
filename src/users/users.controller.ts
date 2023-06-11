@@ -16,11 +16,6 @@ export class UsersController {
     return this.usersService.getMyDetails(req.user.id);
   }
 
-  @Get()
-  async getAll(): Promise<User[]> {
-    return this.usersService.getAll();
-  }
-
   @Get(':email')
   async getOne(@Param('email') email: string): Promise<User> {
     const user = await this.usersService.getOneByEmail(email);
