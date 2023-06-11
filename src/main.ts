@@ -9,7 +9,7 @@ async function bootstrap() {
   app.enableCors({ origin: '*' });
   app.useGlobalPipes(new ValidationPipe());
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup('docs', app, document);
+  // SwaggerModule.setup('docs', app, document);
 
   await app.listen(3001);
 }
